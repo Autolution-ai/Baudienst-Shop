@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warenkorb – BAUDIENST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shop.css">
+<script>window.PAGE_NAV = null;</script>
+</head>
+<body>
+
+<div id="topbar-mount"></div>
+<header id="header-mount"></header>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Shop</a>
+    <span class="sep">›</span>
+    <span class="current">Warenkorb</span>
+  </div>
+</div>
+
+<main>
+  <div class="cat-header">
+    <h1>Ihr Warenkorb</h1>
+    <p>Prüfen Sie Ihre Auswahl und fordern Sie ein <strong>Preisangebot mit B2B-Konditionen</strong> an. Kein Login, kein Pflicht-Account – Antwort innerhalb von 24 Stunden.</p>
+  </div>
+
+  <div class="cart-layout" id="cartLayout">
+    <!-- gefüllt via JS -->
+  </div>
+</main>
+
+<!-- ANFRAGE-FORMULAR MODAL -->
+<div class="modal-backdrop" id="requestModal">
+  <div class="modal">
+    <h2>Preisangebot anfordern</h2>
+    <p class="modal-sub">Wir melden uns innerhalb von 24h mit individuellem B2B-Angebot inkl. Staffelpreisen und Lieferzeit.</p>
+    <form onsubmit="event.preventDefault(); submitRequest();">
+      <label>Firma *</label>
+      <input type="text" required placeholder="Mustermann GmbH">
+      <label>Ansprechpartner *</label>
+      <input type="text" required placeholder="Max Mustermann">
+      <label>E-Mail *</label>
+      <input type="email" required placeholder="info@firma.de">
+      <label>Telefon</label>
+      <input type="tel" placeholder="+49 ...">
+      <label>USt-IdNr.</label>
+      <input type="text" placeholder="DE...">
+      <label>Nachricht</label>
+      <textarea placeholder="Liefertermin, Projekthintergrund …"></textarea>
+      <div class="modal-actions">
+        <button type="button" class="modal-close" onclick="closeModal('requestModal')">Abbrechen</button>
+        <button type="submit" class="btn-primary">Anfrage senden</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="usp-mount"></div>
+<div id="footer-mount"></div>
+<div id="fab-mount"></div>
+
+<script src="assets/products.js"></script>
+<script src="assets/shop.js"></script>
+<script>
+function renderCart() {
+  const cart = getCart();
+  const skus = Object.keys(cart);
+  const layout = document.getElementById('cartLayout');
+
+  if (skus.length === 0) {
+    layout.innerHTML = `
+      <div class="cart-empty" style="grid-column: 1 / -1;">
+        <h2>Ihr Warenkorb ist leer</h2>
+        <p>Stöbern Sie durch unsere Schleifsegmente oder starten Sie den Produktberater.</p>
+        <a href="segmente.html" class="btn-primary">Zu den Schleifsegmenten</a>
+        &nbsp;
+        <a href="finder.html" class="btn-secondary" style="background:#0D0D0D;color:white;">Produktberater starten</a>
+      </div>`;
+    return;
+  }
+
+  const mode = getPriceMode();
+  const rows = skus.map(sku => {
+    const p = PRODUCTS[sku];
+    if (!p) return '';
+    const qty = cart[sku];
+    const unit = mode === 'net' ? p.priceNet : p.priceGross;
+    const unitOther = mode === 'net' ? p.priceGross : p.priceNet;
+    const labelOther = mode === 'net' ? 'brutto' : 'netto';
+    const lineTotal = unit * qty;
+    return `<div class="cart-row" data-sku="${sku}">
+      <div class="cart-row-img"><img src="${p.img}" onerror="this.src='${FALLBACK_IMG}'; this.style.opacity='0.2'"></div>
+      <div class="cart-row-name">
+        <span class="brand-tag">${p.brand}</span>
+        <strong>${p.name}</strong>
+        <span>Art.Nr. ${p.sku} · ${p.qty}</span>
+      </div>
+      <div class="cart-qty">
+        <div class="qty-control">
+          <button class="qty-btn" onclick="cartChangeQty('${sku}', -1)">−</button>
+          <input class="qty-input" type="number" min="1" value="${qty}" onchange="cartSetQty('${sku}', this.value)">
+          <button class="qty-btn" onclick="cartChangeQty('${sku}', 1)">+</button>
+        </div>
+      </div>
+      <div class="cart-row-price">
+        ${formatEUR(lineTotal)}
+        <small>${formatEUR(unit)} / Stk.</small>
+      </div>
+      <button class="cart-row-remove" onclick="removeFromCart('${sku}'); renderCart();" aria-label="Entfernen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+
+  const totalCount = skus.reduce((s, sku) => s + cart[sku], 0);
+  const subtotalNet = getCartSubtotalNet();
+  const subtotalGross = getCartSubtotalGross();
+
+  // Staffelpreis-Demo: ab 5 Stück 5%, ab 10 Stück 8%
+  let discountPct = 0, discountLabel = '';
+  if (totalCount >= 10)      { discountPct = 8; discountLabel = '8 % Gewerbe-Staffelrabatt (ab 10 Stk.)'; }
+  else if (totalCount >= 5)  { discountPct = 5; discountLabel = '5 % Gewerbe-Staffelrabatt (ab 5 Stk.)'; }
+  const discountNet = subtotalNet * (discountPct / 100);
+  const discountGross = subtotalGross * (discountPct / 100);
+  const totalNet = subtotalNet - discountNet;
+  const totalGross = subtotalGross - discountGross;
+
+  let staffelBanner;
+  if (discountPct > 0) {
+    staffelBanner = `<div class="staffel-banner active">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <div><strong>${discountPct} % Staffelrabatt aktiv</strong> – wird auf Ihren Auftrag angerechnet.</div>
+    </div>`;
+  } else {
+    const need = 5 - totalCount;
+    staffelBanner = `<div class="staffel-banner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <div>Noch <strong>${need} Artikel</strong> bis zum 5 %-Staffelrabatt. Ab 10 Stk.: 8 %.</div>
+    </div>`;
+  }
+
+  const displayTotal = mode === 'net' ? totalNet : totalGross;
+  const displaySubtotal = mode === 'net' ? subtotalNet : subtotalGross;
+  const displayDiscount = mode === 'net' ? discountNet : discountGross;
+  const vatLabel = mode === 'net' ? 'zzgl. 19 % MwSt.' : 'inkl. 19 % MwSt.';
+
+  layout.innerHTML = `
+    <div>
+      <div class="cart-table">${rows}</div>
+      <div style="margin-top: 28px;">
+        <a href="segmente.html" style="color:var(--orange);font-weight:600;text-decoration:none;font-size:13px;">← Weiter einkaufen</a>
+      </div>
+    </div>
+    <aside class="cart-summary">
+      ${staffelBanner}
+      <h3>Bestellübersicht</h3>
+      <div class="summary-line"><span>Zwischensumme (${totalCount} Artikel)</span><strong>${formatEUR(displaySubtotal)}</strong></div>
+      ${discountPct > 0 ? `<div class="summary-line summary-discount"><span>${discountLabel}</span><strong>− ${formatEUR(displayDiscount)}</strong></div>` : ''}
+      <div class="summary-line"><span>Versand</span><strong>auf Anfrage</strong></div>
+      <div class="summary-total">
+        <span class="label">Gesamt</span>
+        <span class="value">${formatEUR(displayTotal)}</span>
+      </div>
+      <p class="summary-vat-hint">${vatLabel}</p>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-top:20px;" onclick="openModal('requestModal')">
+        Preisangebot anfordern
+      </button>
+      <button class="btn-secondary" style="width:100%;justify-content:center;margin-top:8px;background:transparent;color:var(--text);border:1.5px solid var(--gray-border);" onclick="showToast('WhatsApp-Beratung wird geöffnet …')">
+        Per WhatsApp beraten lassen
+      </button>
+      <p style="font-size:11.5px;color:var(--gray-mid);margin-top:14px;line-height:1.5;text-align:center;">
+        Kein Online-Checkout. Wir melden uns innerhalb von 24h mit individuellen B2B-Konditionen.
+      </p>
+    </aside>`;
+}
+
+function cartChangeQty(sku, delta) {
+  const cart = getCart();
+  const newQty = (cart[sku] || 1) + delta;
+  setCartQty(sku, newQty);
+  renderCart();
+}
+function cartSetQty(sku, val) {
+  const q = Math.max(0, parseInt(val) || 0);
+  setCartQty(sku, q);
+  renderCart();
+}
+function submitRequest() {
+  closeModal('requestModal');
+  showToast('<span>✓ Anfrage gesendet</span> – wir melden uns innerhalb von 24h');
+  clearCart();
+  renderCart();
+}
+
+document.addEventListener('DOMContentLoaded', renderCart);
+</script>
+</body>
+</html>

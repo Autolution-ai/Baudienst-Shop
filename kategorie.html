@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diamantschleifer – BAUDIENST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shop.css">
+<script>window.PAGE_NAV = 'maschinen';</script>
+</head>
+<body>
+
+<div id="topbar-mount"></div>
+<header id="header-mount"></header>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Shop</a>
+    <span class="sep">›</span>
+    <a href="#">Betontechnik</a>
+    <span class="sep">›</span>
+    <span class="current">Diamantschleifer</span>
+  </div>
+</div>
+
+<main>
+  <div class="cat-header">
+    <h1>Diamantschleifer &amp; Schleiftechnik</h1>
+    <p>Professionelle Bodenschleifmaschinen, Diamant-Schleifsegmente und Werkzeughalter vom Husqvarna-Vertragspartner. Alle Komponenten sortimentsübergreifend kompatibel.</p>
+  </div>
+
+  <!-- SECTION 1: MASCHINEN -->
+  <section class="cat-section">
+    <div class="cat-section-header">
+      <h2>Schleifmaschinen</h2>
+      <span class="count-pill">1 Modell</span>
+    </div>
+    <a href="pg400.html" class="hero-product-card">
+      <div class="card-img">
+        <img src="https://baudienst.shop/wp-content/uploads/artikelbilder-dmc/970704501-525x577.jpg" alt="Husqvarna PG 400">
+      </div>
+      <div class="card-body">
+        <p class="card-brand">Husqvarna</p>
+        <h3 class="card-name">PG 400 Betonschleifer 400 V</h3>
+        <p class="card-desc" style="-webkit-line-clamp:unset;">Universeller Einscheiben-Bodenschleifer mit 400 mm Schleifbreite. Für Vorbereitung, Renovierung und Endbearbeitung mittlerer Flächen. Werkzeugaufnahme Redi Lock® / EZchange.</p>
+        <ul class="hero-product-card-specs">
+          <li><span>Schleifbreite</span><strong>400 mm</strong></li>
+          <li><span>Leistung</span><strong>4 kW</strong></li>
+          <li><span>Drehzahl</span><strong>1.445 U/min</strong></li>
+          <li><span>Gewicht</span><strong>110 kg</strong></li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-price" data-price-sku="pg400"></div>
+          <span class="btn-primary" style="padding:10px 18px;font-size:13px;">Zum Produkt →</span>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- SECTION 2: SCHLEIFSEGMENTE mit FILTER -->
+  <section class="cat-section">
+    <div class="cat-section-header">
+      <h2>Diamant-Schleifsegmente</h2>
+      <span class="count-pill" id="filterCount">8 Produkte</span>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Untergrund</span>
+        <button class="filter-pill" data-filter-type="usage" data-filter-value="weich" onclick="setFilter('usage','weich',this)">Weich</button>
+        <button class="filter-pill" data-filter-type="usage" data-filter-value="mittel" onclick="setFilter('usage','mittel',this)">Mittel</button>
+        <button class="filter-pill" data-filter-type="usage" data-filter-value="hart" onclick="setFilter('usage','hart',this)">Hart</button>
+        <button class="filter-pill" data-filter-type="usage" data-filter-value="beschichtet" onclick="setFilter('usage','beschichtet',this)">Beschichtet</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Ziel</span>
+        <button class="filter-pill" data-filter-type="goal" data-filter-value="abtrag" onclick="setFilter('goal','abtrag',this)">Abtragen</button>
+        <button class="filter-pill" data-filter-type="goal" data-filter-value="schleifen" onclick="setFilter('goal','schleifen',this)">Schleifen</button>
+        <button class="filter-pill" data-filter-type="goal" data-filter-value="polieren" onclick="setFilter('goal','polieren',this)">Polieren</button>
+        <button class="filter-pill" data-filter-type="goal" data-filter-value="renovierung" onclick="setFilter('goal','renovierung',this)">Renovierung</button>
+      </div>
+      <button class="filter-reset" onclick="resetFilter()">Filter zurücksetzen</button>
+    </div>
+
+    <div class="products-grid" id="segmentGrid"></div>
+  </section>
+
+  <!-- SECTION 3: ZUBEHÖR -->
+  <section class="cat-section">
+    <div class="cat-section-header">
+      <h2>Adapterplatten &amp; Werkzeughalter</h2>
+      <span class="count-pill">4 Produkte</span>
+    </div>
+    <div class="products-grid" id="accessoriesGrid"></div>
+  </section>
+</main>
+
+<div id="usp-mount"></div>
+<div id="footer-mount"></div>
+<div id="fab-mount"></div>
+
+<script src="assets/products.js"></script>
+<script src="assets/shop.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  renderProductsGrid(SEGMENT_SKUS, 'segmentGrid', {showCompat: true});
+  renderProductsGrid(ACCESSORY_SKUS, 'accessoriesGrid');
+});
+</script>
+</body>
+</html>

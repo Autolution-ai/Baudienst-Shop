@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schleifsegmente – BAUDIENST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shop.css">
+<script>window.PAGE_NAV = 'segmente';</script>
+</head>
+<body>
+
+<div id="topbar-mount"></div>
+<header id="header-mount"></header>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Shop</a>
+    <span class="sep">›</span>
+    <a href="kategorie.html">Diamantschleifer</a>
+    <span class="sep">›</span>
+    <span class="current">Schleifsegmente</span>
+  </div>
+</div>
+
+<main>
+  <div class="cat-header">
+    <h1>Husqvarna Diamant-Schleifsegmente</h1>
+    <p>Komplettes ELITE-GRIND / T-REX / VARI-GRIND Sortiment für alle PG-Maschinen. Filtern Sie nach Untergrund und Einsatzziel – oder lassen Sie sich vom <a href="finder.html" style="color:var(--orange);font-weight:600;">Produktberater</a> die richtigen Segmente vorschlagen.</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Untergrund</span>
+      <button class="filter-pill" data-filter-type="usage" data-filter-value="weich" onclick="setFilter('usage','weich',this)">Weich</button>
+      <button class="filter-pill" data-filter-type="usage" data-filter-value="mittel" onclick="setFilter('usage','mittel',this)">Mittel</button>
+      <button class="filter-pill" data-filter-type="usage" data-filter-value="hart" onclick="setFilter('usage','hart',this)">Hart</button>
+      <button class="filter-pill" data-filter-type="usage" data-filter-value="beschichtet" onclick="setFilter('usage','beschichtet',this)">Beschichtet</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Ziel</span>
+      <button class="filter-pill" data-filter-type="goal" data-filter-value="abtrag" onclick="setFilter('goal','abtrag',this)">Abtragen</button>
+      <button class="filter-pill" data-filter-type="goal" data-filter-value="schleifen" onclick="setFilter('goal','schleifen',this)">Schleifen</button>
+      <button class="filter-pill" data-filter-type="goal" data-filter-value="polieren" onclick="setFilter('goal','polieren',this)">Polieren</button>
+      <button class="filter-pill" data-filter-type="goal" data-filter-value="renovierung" onclick="setFilter('goal','renovierung',this)">Renovierung</button>
+    </div>
+    <span class="filter-count" id="filterCount">8 Produkte</span>
+    <button class="filter-reset" onclick="resetFilter()">Filter zurücksetzen</button>
+  </div>
+
+  <div class="products-grid" id="segmentGrid"></div>
+
+  <!-- VERGLEICHSTABELLE -->
+  <div class="section-header" style="margin-top: 72px;">
+    <div>
+      <h2 class="section-title">Vergleichstabelle</h2>
+      <p class="section-subtitle">Auf einen Blick: Härteklasse, Einsatzgebiet und Preis</p>
+    </div>
+  </div>
+  <div class="compare-table-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Hersteller-Nr.</th>
+          <th>Untergrund</th>
+          <th>Einsatz</th>
+          <th>Inhalt</th>
+          <th style="text-align:right;">Preis</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="compareTable"></tbody>
+    </table>
+  </div>
+
+  <!-- CTA: FINDER -->
+  <div class="finder-promo" style="margin-top: 72px;">
+    <div>
+      <p class="finder-eyebrow">Produktberater</p>
+      <h2>Nicht sicher, welches Segment Sie brauchen?</h2>
+      <p>3 Fragen zu Untergrund, Ziel und Projektgröße – wir empfehlen Ihnen die 3 passenden Segmente, direkt zum Warenkorb hinzufügen.</p>
+      <a href="finder.html" class="btn-primary">Produktberater starten →</a>
+    </div>
+    <div class="finder-promo-steps">
+      <div class="finder-promo-step"><div class="finder-promo-step-num">1</div><div class="finder-promo-step-text">Betonhärte angeben</div></div>
+      <div class="finder-promo-step"><div class="finder-promo-step-num">2</div><div class="finder-promo-step-text">Ziel definieren</div></div>
+      <div class="finder-promo-step"><div class="finder-promo-step-num">3</div><div class="finder-promo-step-text">Empfehlung erhalten</div></div>
+    </div>
+  </div>
+</main>
+
+<div id="usp-mount"></div>
+<div id="footer-mount"></div>
+<div id="fab-mount"></div>
+
+<script src="assets/products.js"></script>
+<script src="assets/shop.js"></script>
+<script>
+function renderCompareTable() {
+  const usageMap = { weich:'Weich/Abrasiv', mittel:'Mittel', hart:'Hart', beschichtet:'Beschichtet' };
+  const goalMap  = { abtrag:'Abtragen', schleifen:'Schleifen', polieren:'Polieren', renovierung:'Renovierung' };
+  const mode = getPriceMode();
+  const rows = SEGMENT_SKUS.map(sku => {
+    const p = PRODUCTS[sku];
+    const usage = (p.usage || []).map(u => usageMap[u] || u).join(', ');
+    const goal = (p.goal || []).map(g => goalMap[g] || g).join(', ');
+    const priceMain = mode === 'net' ? p.priceNet : p.priceGross;
+    const priceOther = mode === 'net' ? p.priceGross : p.priceNet;
+    const labelOther = mode === 'net' ? 'brutto' : 'netto';
+    return `<tr>
+      <td class="col-name"><strong>${p.short || p.name}</strong><span>${p.brand}</span></td>
+      <td>${p.mfgNo}</td>
+      <td>${usage}</td>
+      <td>${goal}</td>
+      <td>${p.qty}</td>
+      <td class="col-price" style="text-align:right;">${formatEUR(priceMain)}<small>${formatEUR(priceOther)} ${labelOther}</small></td>
+      <td><button class="btn-card-cart" onclick="addToCart('${sku}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></button></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('compareTable').innerHTML = rows;
+}
+document.addEventListener('DOMContentLoaded', () => {
+  renderProductsGrid(SEGMENT_SKUS, 'segmentGrid', {showCompat: true});
+  renderCompareTable();
+});
+// Re-render compare table when price mode toggles
+const _origApplyPriceMode = applyPriceMode;
+applyPriceMode = function() {
+  _origApplyPriceMode();
+  if (document.getElementById('compareTable')) renderCompareTable();
+};
+</script>
+</body>
+</html>
