@@ -1,0 +1,216 @@
+# BAUDIENST – Diamantschleifer Nischenshop
+## Claude Code Projektkontext
+
+---
+
+## Projektüberblick
+
+**Kunde:** Baudienst Caputh (Manfred Braunschweig GmbH)
+**Projekt:** Showcase-Prototyp / Nischenshop Diamantschleifer
+**Zweck:** Sales-Demo für Kundentermin – zeigt Design-, CRO- und Technikkompetenz
+**Ziel:** Überzeugender Klick-Prototyp → Deal für vollständigen Shop-Relaunch
+
+**Aktueller Stand:**
+- Prototyp `index.html` existiert (Produktseite Husqvarna PG 400 + Schleifsegment-Finder)
+- Statisches HTML/CSS/JS, keine Backend-Anbindung
+- Deployment via Netlify (Demo-URL für Kundentermin)
+
+---
+
+## Tech Stack
+
+```
+Frontend:   HTML5, Vanilla CSS (CSS Custom Properties), Vanilla JS
+Fonts:      Inter via Google Fonts
+Icons:      Inline SVG (kein externes Icon-Framework)
+Deployment: Netlify (drag & drop oder CLI)
+Bilder:     Direkt von baudienst.shop CDN (wp-content/uploads/artikelbilder-dmc/)
+```
+
+**Kein Framework, kein Build-Tool, kein npm.** Alles läuft als einzelne HTML-Datei oder als einfaches Multi-File-Projekt.
+
+---
+
+## Design-System
+
+```css
+--black:       #0D0D0D   /* Hintergrund, Header, USP-Bar */
+--orange:      #E85A00   /* Primärfarbe, CTAs, Akzente */
+--orange-light:#FF6B10   /* Hover-State */
+--gray-bg:     #F5F5F5   /* Sektionshintergründe, Produktbilder */
+--gray-mid:    #8A8A8A   /* Labels, Metainfos */
+--gray-border: #E0E0E0   /* Trennlinien, Card-Borders */
+--white:       #FFFFFF
+--text:        #1A1A1A   /* Haupttext */
+--text-light:  #666666   /* Sekundärtext */
+--success:     #1A7A3F   /* Lieferstatus, Verfügbarkeit */
+```
+
+**Typographie:** Inter, Gewichte 300/400/500/600/700/800
+**Border-Radius:** 6–12px für Cards, 4–7px für Buttons
+**Max-Width:** 1280px, Padding 24px links/rechts
+
+---
+
+## Seitenstruktur (geplant)
+
+```
+index.html          → Produktseite Husqvarna PG 400 (fertig)
+kategorie.html      → Kategorie-/Übersichtsseite Diamantschleifer
+finder.html         → Standalone Schleifberater (interaktiver Produktfinder)
+warenkorb.html      → Warenkorb-Seite (Demo-Zustand, kein echter Checkout)
+```
+
+---
+
+## Produktdaten (Kern-Sortiment für den Prototyp)
+
+### Hauptprodukt
+| Feld | Wert |
+|------|------|
+| Name | Husqvarna PG 400 Betonschleifer 400V |
+| Art.Nr. | 00200606 |
+| Hersteller-Nr. | 970704501 |
+| EAN | 7333377534254 |
+| Preis netto | 5.494,67 € |
+| Preis brutto | 6.538,66 € |
+| Lieferzeit | 2–3 Werktage |
+| Bild-Basis-URL | `https://baudienst.shop/wp-content/uploads/artikelbilder-dmc/970704501` |
+
+**Technische Daten:**
+- Schleifbreite: 400 mm
+- Spannung: 400 V / 3 Ph
+- Teller-Drehzahl: 1.445 U/min
+- Max. Ausgangsleistung: 4 kW
+- Schleifdruck (max.): 49 kg
+- Gewicht: 110 kg
+- Maße (L×B×H): 1360×470×960 mm
+- Werkzeugaufnahme: Redi Lock® / EZchange
+
+### Schleifsegmente (Verschleiß / Wiederkauf)
+| Name | Hersteller-Nr. | Preis brutto | Inhalt | Einsatz |
+|------|----------------|-------------|--------|---------|
+| ELITE-GRIND EZ H | EZ H | 90,87 € | 3 Stk. | Harter Beton |
+| ELITE-GRIND EZ S | EZ S | 139,23 € | 3 Stk. | Weicher/abrasiver Beton |
+| ELITE-GRIND EZ X | EZ X | 90,87 € | 3 Stk. | Sehr harter Beton |
+| ELITE-GRIND EZ SHARXX | EZ SHARXX | 90,87 € | 3 Stk. | Extrem harter Beton |
+| ELITE-GRIND EZ M | EZ M | 90,87 € | 3 Stk. | Mittelharter Beton |
+| EZ T-REX DOME PCD | EZ T-REX | 207,69 € | 3 Stk. | Alle Untergründe, Epoxid |
+| EZ T-REX SUPER PCD | EZ T-REX SUPER | 289,88 € | 3 Stk. | Max. Abtrag, alle Untergründe |
+| VARI-GRIND EZ SL | EZ SL | 193,26 € | 3 Stk. | Holzschleifen |
+
+### Zubehör / Adapterplatten
+| Name | Preis brutto | Passend für |
+|------|-------------|-------------|
+| Adapterplatte Multi 400 9 | 434,35 € | PG 400 |
+| Adapterplatte Multi 280 6 | 392,15 € | PG 280 |
+| Werkzeughalter Multi 400 9 | 577,15 € | PG 400 |
+| Werkzeughalter Multi 230 6 H | 246,70 € | PG 540 |
+
+---
+
+## Kernkomponenten (bereits implementiert)
+
+### 1. Produktfinder (Schleifsegment-Berater)
+**Datei:** `index.html` → `.finder-card`
+**Logik:** 3-Step-Wizard
+- Schritt 1: Betonhärte (weich / mittel / hart / beschichtet)
+- Schritt 2: Ziel (Abtragen / Schleifen / Polieren / Renovierung)
+- Schritt 3: Projektgröße (klein / mittel / groß / Dauerbetrieb)
+→ Gibt 3 passende Schleifsegmente aus der `recommendations`-Matrix zurück
+
+**Erweiterungshinweis:** Empfehlungsmatrix in `recommendations`-Objekt in JS – bei neuen Produkten einfach erweitern.
+
+### 2. Warenkorb-Zähler
+**Logik:** `cartCount` Variable, `addToCart(name)` Funktion, Toast-Feedback
+**Wichtig:** Kein echter Checkout – nur Demo-Zustand für Präsentation
+
+### 3. Galerie
+**Logik:** `switchImg(el, src)` tauscht `#mainImg`, `active`-Klasse auf Thumbnails
+
+---
+
+## Nächste Ausbaustufen
+
+### Stufe 1 – Kategorie-Seite (`kategorie.html`)
+- Grid-Layout: 3–4 Produkte pro Reihe
+- Filter-Bar oben: Untergrundtyp / Marke / Preisrange
+- Produktkarten konsistent mit bestehendem `product-card`-Styling
+- "Passend zum PG 400" Badge auf kompatiblen Segmenten
+
+### Stufe 2 – Standalone Produktfinder (`finder.html`)
+- Vollbild-Wizard (kein Shop-Layout drumherum)
+- Für direkte Google Ads-Landing-Page nutzbar
+- Am Ende: Direkt-Link zur passenden Produktseite + WhatsApp-Button
+
+### Stufe 3 – Warenkorb-Seite (`warenkorb.html`)
+- Produktliste mit Mengenänderung
+- Staffelpreis-Hinweis ab X Einheiten
+- "Preisangebot anfordern" statt echtem Checkout (B2B-Fokus)
+- Kontaktformular-Integration (Netlify Forms für Demo)
+
+---
+
+## Wichtige UX-Prinzipien für diesen Shop
+
+1. **B2B first:** Nettopreise prominent, Bruttopreise klein darunter. Staffelpreise immer erwähnen.
+2. **Kein Blocker vor dem Kauf:** Kein Login-Zwang, kein Pflicht-Account
+3. **Telefon immer sichtbar:** Im Header, Footer, und als FAB auf Mobile
+4. **WhatsApp als primärer Kontaktkanal:** FAB bleibt auf allen Seiten
+5. **Schleifsegmente = Wiederkauf:** Cross-Sells immer auf Produktseiten zeigen
+6. **Bilder von Baudienst-CDN:** `https://baudienst.shop/wp-content/uploads/artikelbilder-dmc/` – mit `onerror`-Fallback absichern
+
+---
+
+## DSGVO-Checkliste (für finales Deployment)
+
+- [ ] Impressum verlinkt (jede Seite, Footer)
+- [ ] Datenschutzerklärung verlinkt
+- [ ] AGB + Widerrufsbelehrung verlinkt
+- [ ] Cookie-Banner vor Google Fonts / Analytics laden
+- [ ] SSL aktiv (Netlify: automatisch)
+- [ ] Google Fonts: entweder self-hosted oder Cookie-Consent davor
+
+---
+
+## Deployment (Netlify)
+
+```bash
+# Option A: Drag & Drop
+# Ordner in netlify.com/drop ziehen → sofortige Demo-URL
+
+# Option B: CLI
+npm install -g netlify-cli
+netlify deploy --dir . --prod
+```
+
+**Demo-Domain-Format:** `baudienst-pilot.netlify.app` oder eigene Subdomain
+
+---
+
+## Datei-Konventionen
+
+```
+/
+├── index.html          # Produktseite (Hauptprodukt)
+├── kategorie.html      # Übersichtsseite
+├── finder.html         # Standalone Produktberater
+├── warenkorb.html      # Warenkorb Demo
+├── CLAUDE.md           # Diese Datei
+└── assets/             # Nur falls lokale Assets nötig
+    └── logo.png
+```
+
+**Kein `src/`, kein `dist/`, kein Build-Schritt.** Alle Dateien sind direkt deploybar.
+
+---
+
+## Kontext für KI-Assistenz
+
+Wenn du in diesem Projekt arbeitest:
+- Halte dich an das bestehende CSS-Variablen-System (keine neuen Farben einführen)
+- Neue Komponenten folgen dem Muster: `section > .inner (max-width 1280px) > content`
+- JS bleibt Vanilla – kein jQuery, kein React, kein Alpine
+- Alle Preise immer mit Brutto UND Netto ausgeben (B2B-Pflicht)
+- `onerror`-Fallback auf allen `<img>` Tags die Baudienst-CDN-URLs nutzen
+- Responsiveness: Breakpoint bei 900px, Mobile-first für neue Komponenten
