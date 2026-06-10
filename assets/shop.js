@@ -20,19 +20,18 @@ function addToCart(sku, qty) {
   qty = qty || 1;
   if (!PRODUCTS[sku]) {
     console.warn('Unbekannte SKU:', sku);
-    showToast(`<span>${sku}</span> in den Warenkorb gelegt`);
     return;
   }
   const cart = getCart();
   cart[sku] = (cart[sku] || 0) + qty;
   saveCart(cart);
-  showToast(`<span>${PRODUCTS[sku].short || PRODUCTS[sku].name}</span> in den Warenkorb gelegt`);
+  openCartDrawer();
 }
 function addManyToCart(skus) {
   const cart = getCart();
   skus.forEach(sku => { cart[sku] = (cart[sku] || 0) + 1; });
   saveCart(cart);
-  showToast(`<span>${skus.length} Artikel</span> in den Warenkorb gelegt`);
+  openCartDrawer();
 }
 function setCartQty(sku, qty) {
   const cart = getCart();
@@ -369,7 +368,7 @@ function renderUspBar() {
     </div>
     <div class="usp-item">
       <div class="usp-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-      <div><p class="usp-title">Versand in 2–3 Werktagen</p><p class="usp-desc">Schleifsegmente auf Lager – sofort lieferbar</p></div>
+      <div><p class="usp-title">Versand in 2–3 Werktagen</p><p class="usp-desc">Schleifsegmente auf Lager. Sofort lieferbar.</p></div>
     </div>
     <div class="usp-item">
       <div class="usp-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg></div>
@@ -446,12 +445,209 @@ function mountChrome(activeNav) {
 }
 
 /* ============================================================
+   CART DRAWER (Smart Checkout, slide-in von rechts)
+   ============================================================ */
+function renderCartDrawerMarkup() {
+  return `<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeCartDrawer()"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="cart-drawer-head">
+      <h3>Ihr Warenkorb <small id="drawerCount">(0)</small></h3>
+      <button class="drawer-close" onclick="closeCartDrawer()" aria-label="Schließen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer-body" id="drawerBody"></div>
+    <div class="cart-drawer-foot" id="drawerFoot"></div>
+  </aside>`;
+}
+function openCartDrawer() {
+  const d = document.getElementById('cartDrawer');
+  const b = document.getElementById('drawerBackdrop');
+  if (!d || !b) return;
+  renderCartDrawer();
+  d.classList.add('open');
+  b.classList.add('open');
+  d.setAttribute('aria-hidden', 'false');
+}
+function closeCartDrawer() {
+  const d = document.getElementById('cartDrawer');
+  const b = document.getElementById('drawerBackdrop');
+  if (!d || !b) return;
+  d.classList.remove('open');
+  b.classList.remove('open');
+  d.setAttribute('aria-hidden', 'true');
+}
+function renderCartDrawer() {
+  const cart = getCart();
+  const skus = Object.keys(cart);
+  const body = document.getElementById('drawerBody');
+  const foot = document.getElementById('drawerFoot');
+  const count = document.getElementById('drawerCount');
+  if (!body || !foot) return;
+
+  const totalCount = getCartItemCount();
+  if (count) count.textContent = `(${totalCount})`;
+
+  if (skus.length === 0) {
+    body.innerHTML = `<div class="cart-drawer-empty">
+      <h4>Noch leer</h4>
+      <p>Stöbern Sie im Sortiment oder starten Sie den Produktberater.</p>
+    </div>`;
+    foot.innerHTML = `<a href="segmente.html" class="drawer-cta">Zu den Schleifsegmenten</a>
+      <a href="finder.html" class="drawer-cta-secondary">Produktberater starten</a>`;
+    return;
+  }
+
+  const mode = getPriceMode();
+  body.innerHTML = skus.map(sku => {
+    const p = PRODUCTS[sku];
+    if (!p) return '';
+    const qty = cart[sku];
+    const unit = mode === 'net' ? p.priceNet : p.priceGross;
+    return `<div class="cart-drawer-item">
+      <div class="cart-drawer-item-img">
+        <img src="${p.img}" alt="" onerror="this.src='${FALLBACK_IMG}';this.style.opacity='0.2'">
+      </div>
+      <div class="cart-drawer-item-info">
+        <div class="cart-drawer-item-name">${p.short || p.name}</div>
+        <div class="cart-drawer-item-meta">
+          <div class="drawer-qty">
+            <button onclick="cartChangeQtyDrawer('${sku}', -1)" aria-label="Weniger">−</button>
+            <span>${qty}</span>
+            <button onclick="cartChangeQtyDrawer('${sku}', 1)" aria-label="Mehr">+</button>
+          </div>
+          <span>${p.qty}</span>
+        </div>
+      </div>
+      <div class="cart-drawer-item-side">
+        <div class="cart-drawer-item-price">${formatEUR(unit * qty)}</div>
+        <button class="cart-drawer-remove" onclick="cartRemoveDrawer('${sku}')">entfernen</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const subtotalNet = getCartSubtotalNet();
+  const subtotalGross = getCartSubtotalGross();
+  let discountPct = 0, staffelText = '';
+  if (totalCount >= 10) {
+    discountPct = 8;
+    staffelText = `<div class="cart-drawer-staffel success">✓ 8 % Staffelrabatt aktiv</div>`;
+  } else if (totalCount >= 5) {
+    discountPct = 5;
+    staffelText = `<div class="cart-drawer-staffel success">✓ 5 % Staffelrabatt aktiv (ab 10 Stk. 8 %)</div>`;
+  } else {
+    const need = 5 - totalCount;
+    staffelText = `<div class="cart-drawer-staffel">Noch ${need} Artikel bis 5 % Staffelrabatt</div>`;
+  }
+  const discountNet = subtotalNet * (discountPct / 100);
+  const discountGross = subtotalGross * (discountPct / 100);
+  const totalNet = subtotalNet - discountNet;
+  const totalGross = subtotalGross - discountGross;
+  const displaySubtotal = mode === 'net' ? subtotalNet : subtotalGross;
+  const displayTotal = mode === 'net' ? totalNet : totalGross;
+  const vatLabel = mode === 'net' ? 'zzgl. 19 % MwSt.' : 'inkl. 19 % MwSt.';
+
+  foot.innerHTML = `
+    <div class="cart-drawer-summary"><span>Zwischensumme</span><strong>${formatEUR(displaySubtotal)}</strong></div>
+    ${discountPct > 0 ? `<div class="cart-drawer-summary" style="color:var(--success);"><span>Staffelrabatt ${discountPct}&nbsp;%</span><strong>− ${formatEUR(mode === 'net' ? discountNet : discountGross)}</strong></div>` : ''}
+    ${staffelText}
+    <div class="cart-drawer-summary total"><span class="label">Gesamt</span><span class="value">${formatEUR(displayTotal)}</span></div>
+    <div class="cart-drawer-vat-hint">${vatLabel}</div>
+    <a href="warenkorb.html" class="drawer-cta">Zum Warenkorb &amp; Angebot anfordern</a>
+    <button class="drawer-cta-secondary" onclick="closeCartDrawer()">Weiter einkaufen</button>`;
+}
+function cartChangeQtyDrawer(sku, delta) {
+  const cart = getCart();
+  const newQty = (cart[sku] || 1) + delta;
+  setCartQty(sku, newQty);
+  renderCartDrawer();
+}
+function cartRemoveDrawer(sku) {
+  removeFromCart(sku);
+  renderCartDrawer();
+}
+
+/* ============================================================
+   NEWSLETTER POPUP (5% Rabatt, einmal pro Browser)
+   ============================================================ */
+const NEWSLETTER_KEY = 'baudienst_newsletter_state';
+function renderNewsletterMarkup() {
+  return `<div class="newsletter-backdrop" id="newsletterBackdrop">
+    <div class="newsletter-modal">
+      <button class="newsletter-close" onclick="dismissNewsletter()" aria-label="Schließen">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="newsletter-visual">
+        <span class="newsletter-visual-label">Neukunden-Vorteil</span>
+        <div>
+          <div class="newsletter-discount">5&nbsp;%<small>auf Ihre erste Bestellung</small></div>
+        </div>
+      </div>
+      <div class="newsletter-content">
+        <h2>Direkt vom Fachhändler.<br>5&nbsp;% bei der ersten Bestellung.</h2>
+        <p>Tragen Sie Ihre Geschäfts-E-Mail ein. Wir senden Ihnen den Rabattcode plus monatliche Hinweise zu neuen Werkzeugen, Aktionen und Husqvarna-Updates. Keine Werbeflut, jederzeit abbestellbar.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter(this);">
+          <input type="email" placeholder="ihre.firma@beispiel.de" required>
+          <button type="submit">Rabattcode anfordern</button>
+        </form>
+        <button class="newsletter-no-thanks" onclick="dismissNewsletter()">Nein danke, später vielleicht</button>
+        <p class="newsletter-fine">Mit Klick auf „Rabattcode anfordern" willigen Sie ein, dass wir Ihnen Werbe-E-Mails senden dürfen. Abmeldung jederzeit per Link in jeder E-Mail.</p>
+      </div>
+    </div>
+  </div>`;
+}
+function maybeShowNewsletter() {
+  const state = localStorage.getItem(NEWSLETTER_KEY);
+  if (state === 'dismissed' || state === 'subscribed') return;
+  setTimeout(() => {
+    const bd = document.getElementById('newsletterBackdrop');
+    if (bd) bd.classList.add('show');
+  }, 9000);
+}
+function dismissNewsletter() {
+  const bd = document.getElementById('newsletterBackdrop');
+  if (bd) bd.classList.remove('show');
+  localStorage.setItem(NEWSLETTER_KEY, 'dismissed');
+}
+function subscribeNewsletter(form) {
+  const email = form.querySelector('input[type="email"]').value;
+  localStorage.setItem(NEWSLETTER_KEY, 'subscribed');
+  const bd = document.getElementById('newsletterBackdrop');
+  if (bd) bd.classList.remove('show');
+  showToast(`<span>✓ Rabattcode gesendet</span> an ${email}`);
+}
+
+/* ============================================================
+   MOUNT DRAWER + NEWSLETTER (auf jeder Seite)
+   ============================================================ */
+function mountChromeExtras() {
+  let drawer = document.getElementById('cartDrawer');
+  if (!drawer) {
+    const div = document.createElement('div');
+    div.innerHTML = renderCartDrawerMarkup();
+    while (div.firstChild) document.body.appendChild(div.firstChild);
+  }
+  let news = document.getElementById('newsletterBackdrop');
+  if (!news) {
+    const div = document.createElement('div');
+    div.innerHTML = renderNewsletterMarkup();
+    while (div.firstChild) document.body.appendChild(div.firstChild);
+  }
+}
+
+/* ============================================================
    INIT (auf jeder Seite aufrufen)
    ============================================================ */
 function initShop(activeNav) {
   mountChrome(activeNav);
+  mountChromeExtras();
   renderCartBadge();
   applyPriceMode();
+  maybeShowNewsletter();
+  // ESC schließt Drawer / Newsletter
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeCartDrawer(); dismissNewsletter(); }
+  });
 }
 // Auto-init: page may set window.PAGE_NAV before this script loads
 document.addEventListener('DOMContentLoaded', () => initShop(window.PAGE_NAV));
