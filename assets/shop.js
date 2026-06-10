@@ -159,13 +159,14 @@ function renderProductCard(sku, opts) {
   if (!p) return '';
   const compatBadge = (opts.showCompat && p.compat && p.compat.includes('PG 400'))
     ? '<span class="card-compat-badge">Passt zu PG 400</span>' : '';
-  const url = p.url || ('pg400.html'); // alle Segment-Klicks → PDP (Demo-Vereinfachung)
+  const url = p.url || 'pg400.html';
   const dataAttrs = `data-sku="${sku}" data-usage="${(p.usage || []).join(',')}" data-goal="${(p.goal || []).join(',')}" data-cat="${p.category}"`;
+  // Fallback: hide img, show placeholder block with product short name + brand
+  const fallbackJs = `this.style.display='none'; this.parentElement.classList.add('card-img-fallback');`;
   return `
     <div class="product-card" ${dataAttrs}>
-      <a class="card-img" href="${url}" style="text-decoration:none;">
-        <img src="${p.img}" alt="${p.name}"
-             onerror="this.src='${FALLBACK_IMG}'; this.style.opacity='0.15'; this.style.padding='30px'">
+      <a class="card-img" href="${url}" data-fallback-title="${(p.short || p.name).replace(/"/g, '&quot;')}" data-fallback-brand="${p.brand}">
+        <img src="${p.img}" alt="${p.name}" onerror="${fallbackJs}">
         ${compatBadge}
       </a>
       <div class="card-body">
