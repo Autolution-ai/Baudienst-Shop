@@ -297,6 +297,60 @@ function applyFilter() {
 }
 
 /* ============================================================
+   SHOP-NAV (Tabs + Chips auf der Startseite v3)
+   ============================================================ */
+const shopState = { tab: 'all', usage: null, goal: null };
+function setShopTab(cat) {
+  shopState.tab = cat;
+  document.querySelectorAll('.shop-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === cat);
+  });
+  const chipsRow = document.getElementById('shopFilterChips');
+  if (chipsRow) {
+    const showChips = (cat === 'segment' || cat === 'all');
+    chipsRow.style.opacity = showChips ? '1' : '0.4';
+    chipsRow.style.pointerEvents = showChips ? 'auto' : 'none';
+  }
+  applyShopFilter();
+}
+function setShopFilter(type, value) {
+  if (shopState[type] === value) shopState[type] = null;
+  else shopState[type] = value;
+  document.querySelectorAll(`.shop-chip[data-chip-type="${type}"]`).forEach(b => {
+    b.classList.toggle('active', b.dataset.chipValue === shopState[type]);
+  });
+  applyShopFilter();
+}
+function resetShopFilter() {
+  shopState.usage = null;
+  shopState.goal = null;
+  document.querySelectorAll('.shop-chip').forEach(b => b.classList.remove('active'));
+  applyShopFilter();
+}
+function applyShopFilter() {
+  let visible = 0;
+  document.querySelectorAll('#shopGrid .product-card').forEach(card => {
+    const cat = card.dataset.cat;
+    const matchTab = shopState.tab === 'all' || cat === shopState.tab;
+    let matchChips = true;
+    if (cat === 'segment') {
+      const usage = (card.dataset.usage || '').split(',');
+      const goal = (card.dataset.goal || '').split(',');
+      const matchUsage = !shopState.usage || usage.includes(shopState.usage);
+      const matchGoal = !shopState.goal || goal.includes(shopState.goal);
+      matchChips = matchUsage && matchGoal;
+    } else if ((shopState.usage || shopState.goal) && shopState.tab === 'all') {
+      matchChips = false;
+    }
+    const show = matchTab && matchChips;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  const c = document.getElementById('shopVisibleCount');
+  if (c) c.textContent = visible;
+}
+
+/* ============================================================
    MODAL (Anfrage-Formular)
    ============================================================ */
 function openModal(id) {
@@ -329,11 +383,11 @@ function renderTopbar() {
 }
 function renderHeader(activeNav) {
   const items = [
-    { key: 'home',     label: 'Startseite',      href: 'index.html' },
-    { key: 'maschinen',label: 'Diamantschleifer',href: 'kategorie.html' },
-    { key: 'segmente', label: 'Schleifsegmente', href: 'segmente.html' },
-    { key: 'finder',   label: 'Produktberater',  href: 'finder.html' },
-    { key: 'kontakt',  label: 'Kontakt',         href: '#' },
+    { key: 'sortiment', label: 'Sortiment',       href: 'index.html#produkte' },
+    { key: 'segmente',  label: 'Schleifsegmente', href: 'index.html#produkte' },
+    { key: 'maschine',  label: 'Husqvarna PG 400',href: 'pg400.html' },
+    { key: 'berater',   label: 'Produktberater',  href: 'index.html#berater' },
+    { key: 'werkstatt', label: 'Werkstatt',       href: 'index.html#werkstatt' },
   ];
   const nav = items.map(i =>
     `<a href="${i.href}" class="${i.key === activeNav ? 'active' : ''}">${i.label}</a>`
@@ -393,20 +447,20 @@ function renderFooter() {
     <div class="footer-col">
       <h4>Shop</h4>
       <ul>
-        <li><a href="kategorie.html">Diamantschleifer</a></li>
-        <li><a href="segmente.html">Schleifsegmente</a></li>
-        <li><a href="#">Betontechnik</a></li>
-        <li><a href="#">Putztechnik</a></li>
-        <li><a href="#">Vermietung</a></li>
+        <li><a href="index.html#produkte">Sortiment</a></li>
+        <li><a href="pg400.html">Husqvarna PG 400</a></li>
+        <li><a href="index.html#produkte">Schleifsegmente</a></li>
+        <li><a href="index.html#produkte">Adapter &amp; Halter</a></li>
+        <li><a href="warenkorb.html">Warenkorb</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Service</h4>
       <ul>
-        <li><a href="#">Reparatur &amp; Wartung</a></li>
-        <li><a href="#">B2B-Gewerbepreise</a></li>
+        <li><a href="index.html#werkstatt">Reparatur &amp; Wartung</a></li>
+        <li><a href="index.html#berater">Produktberater</a></li>
+        <li><a href="#">Gewerbepreise</a></li>
         <li><a href="#">Versand &amp; Lieferung</a></li>
-        <li><a href="finder.html">Produktberater</a></li>
         <li><a href="#">FAQ</a></li>
       </ul>
     </div>
