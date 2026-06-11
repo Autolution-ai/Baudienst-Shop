@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 110" width="320" height="110" role="img" aria-label="BAUDIENST Manfred Braunschweig GmbH">
+  <style>
+    .brand-letter {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      fill: #D62E20;
+      letter-spacing: -0.01em;
+    }
+    .corp-line {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 9.5px;
+      fill: #0D0D0D;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .seg-line {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 8.5px;
+      fill: #D62E20;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .service-line {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      fill: #FFFFFF;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+  </style>
+
+  <!-- BAU -->
+  <text x="0" y="48" class="brand-letter" font-size="50">BAU</text>
+  <!-- DIENST -->
+  <text x="98" y="48" class="brand-letter" font-size="50">DIENST</text>
+
+  <!-- Corp line under BAU -->
+  <text x="2" y="62" class="corp-line">Manfred Braunschweig GmbH</text>
+
+  <!-- Segment lines right of DIENST -->
+  <text x="232" y="22" class="seg-line">Baumaschinen</text>
+  <text x="232" y="36" class="seg-line">Baugeräte</text>
+  <text x="232" y="50" class="seg-line">Industriebedarf</text>
+
+  <!-- Black service stripe -->
+  <rect x="0" y="74" width="320" height="26" fill="#0D0D0D"/>
+  <text x="22" y="92" class="service-line">Verkauf · Vermietung · Service</text>
+</svg>

@@ -393,13 +393,8 @@ function renderHeader(activeNav) {
     `<a href="${i.href}" class="${i.key === activeNav ? 'active' : ''}">${i.label}</a>`
   ).join('');
   return `<header><div class="header-inner">
-    <a href="index.html" class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-          <circle cx="12" cy="12" r="9"/><path d="M12 3 L12 21 M3 12 L21 12"/>
-        </svg>
-      </div>
-      <div><span class="logo-text">BAUDIENST</span><span class="logo-sub">Caputh · seit 1980</span></div>
+    <a href="index.html" class="logo logo-brand">
+      <img src="assets/logo-compact.svg" alt="BAUDIENST Manfred Braunschweig GmbH" class="logo-img">
     </a>
     <nav class="main-nav">${nav}</nav>
     <div class="header-actions">
@@ -438,9 +433,8 @@ function renderUspBar() {
 function renderFooter() {
   return `<footer><div class="footer-inner">
     <div class="footer-brand">
-      <a href="index.html" class="logo">
-        <div class="logo-mark"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 3 L12 21 M3 12 L21 12"/></svg></div>
-        <div><span class="logo-text">BAUDIENST</span><span class="logo-sub">Caputh · seit 1980</span></div>
+      <a href="index.html" class="logo logo-brand">
+        <img src="assets/logo.svg" alt="BAUDIENST Manfred Braunschweig GmbH" class="logo-img-full">
       </a>
       <p class="footer-desc">Ihr Fachpartner für Diamantschleiftechnik, Betontechnik und Baugeräte in Berlin und Brandenburg.</p>
     </div>
