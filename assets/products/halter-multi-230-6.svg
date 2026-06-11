@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="HUSQVARNA WZH-230-6H">
+  <defs>
+  <radialGradient id="plate" cx="50%" cy="42%" r="62%">
+    <stop offset="0%" stop-color="#7A7A7A"/>
+    <stop offset="55%" stop-color="#3F3F3F"/>
+    <stop offset="100%" stop-color="#1A1A1A"/>
+  </radialGradient>
+  <linearGradient id="hub" x1="20%" y1="20%" x2="80%" y2="80%">
+    <stop offset="0%" stop-color="#5A5A5A"/>
+    <stop offset="100%" stop-color="#0D0D0D"/>
+  </linearGradient>
+  <radialGradient id="adpPlate" cx="40%" cy="35%" r="75%">
+    <stop offset="0%" stop-color="#A5A5A5"/>
+    <stop offset="70%" stop-color="#5C5C5C"/>
+    <stop offset="100%" stop-color="#2A2A2A"/>
+  </radialGradient>
+  <filter id="dropshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+    <feOffset dx="0" dy="6" result="off"/>
+    <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+  <rect width="400" height="400" fill="#F5F5F5"/>
+  <ellipse cx="200" cy="320" rx="130" ry="12" fill="rgba(0,0,0,0.15)"/>
+  <rect x="60" y="70" width="280" height="230" rx="18" fill="url(#hub)" filter="url(#dropshadow)"/>
+  <rect x="60" y="70" width="280" height="230" rx="18" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+  <circle cx="90" cy="130" r="14" fill="#0A0A0A"/>
+  <circle cx="90" cy="130" r="14" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <circle cx="200" cy="130" r="14" fill="#0A0A0A"/>
+  <circle cx="200" cy="130" r="14" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <circle cx="310" cy="130" r="14" fill="#0A0A0A"/>
+  <circle cx="310" cy="130" r="14" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <circle cx="90" cy="230" r="14" fill="#0A0A0A"/>
+  <circle cx="90" cy="230" r="14" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <circle cx="200" cy="230" r="14" fill="#0A0A0A"/>
+  <circle cx="200" cy="230" r="14" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <circle cx="310" cy="230" r="14" fill="#0A0A0A"/>
+  <circle cx="310" cy="230" r="14" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <rect x="60" y="318" width="280" height="3" fill="#888"/>
+  <text x="200" y="354" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="20" fill="#0D0D0D" letter-spacing="0.02em">WERKZEUGHALTER 230 / 6 H</text>
+  <text x="200" y="378" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="11" fill="#666" letter-spacing="0.22em">HUSQVARNA</text>
+</svg>
