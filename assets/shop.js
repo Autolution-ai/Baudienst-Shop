@@ -369,14 +369,14 @@ function renderTopbar() {
   return `<div class="topbar"><div class="topbar-inner">
     <div class="topbar-items">
       <span class="topbar-tag">B2B</span>
-      <span>Gewerbekunden: Staffelpreise &amp; Rechnung auf Anfrage</span>
+      <span>Gewerbekonditionen, Rechnungskauf und Skonto auf Anfrage</span>
     </div>
     <div class="topbar-items">
       <div class="price-toggle" role="tablist" aria-label="Preisanzeige">
         <button data-mode="gross" onclick="setPriceMode('gross')">Brutto</button>
         <button data-mode="net" onclick="setPriceMode('net')">Netto</button>
       </div>
-      <span>Mo–Fr 7:00–17:00</span>
+      <span>Montag bis Freitag, 7 bis 17 Uhr</span>
       <a href="tel:+493320920049">📞 03320 / 2004-97</a>
     </div>
   </div></div>`;
@@ -414,19 +414,19 @@ function renderUspBar() {
   return `<div class="usp-bar"><div class="usp-inner">
     <div class="usp-item">
       <div class="usp-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div><p class="usp-title">Husqvarna Vertragspartner</p><p class="usp-desc">Autorisierter Fachhändler mit eigenem Werkstatt-Service</p></div>
+      <div><p class="usp-title">Vertragspartner seit 1980</p><p class="usp-desc">Husqvarna-zertifizierter Fachhandel mit Originalteilen aus dem Hersteller-Katalog.</p></div>
     </div>
     <div class="usp-item">
       <div class="usp-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-      <div><p class="usp-title">Versand in 2–3 Werktagen</p><p class="usp-desc">Schleifsegmente auf Lager. Sofort lieferbar.</p></div>
+      <div><p class="usp-title">Lager Caputh</p><p class="usp-desc">Bestellung bis 14 Uhr verlässt heute das Haus, Tracking-Nummer kommt am gleichen Abend.</p></div>
     </div>
     <div class="usp-item">
       <div class="usp-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg></div>
-      <div><p class="usp-title">B2B-Gewerbepreise</p><p class="usp-desc">Staffelpreise und Rechnungskauf auf Anfrage</p></div>
+      <div><p class="usp-title">Rechnung statt Vorkasse</p><p class="usp-desc">Staffelpreise, Skonto und NET 14 ohne lange Onboarding-Prozedur.</p></div>
     </div>
     <div class="usp-item">
       <div class="usp-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
-      <div><p class="usp-title">Direkte Beratung</p><p class="usp-desc">Mo–Fr 7–17 Uhr: 03320 / 2004-97</p></div>
+      <div><p class="usp-title">Beratung am Telefon</p><p class="usp-desc">Mit jemandem, der die Maschine kennt. Werktags 7 bis 17 Uhr unter 03320 / 2004-97.</p></div>
     </div>
   </div></div>`;
 }
@@ -436,7 +436,7 @@ function renderFooter() {
       <a href="index.html" class="logo logo-brand">
         <img src="assets/logo.svg" alt="BAUDIENST Manfred Braunschweig GmbH" class="logo-img-full">
       </a>
-      <p class="footer-desc">Ihr Fachpartner für Diamantschleiftechnik, Betontechnik und Baugeräte in Berlin und Brandenburg.</p>
+      <p class="footer-desc">Husqvarna-Vertragspartner für Diamantschleiftechnik, Betontechnik und Baugeräte. Werkstatt und Lager in Caputh, Versand bundesweit, Holservice in Brandenburg und Berlin.</p>
     </div>
     <div class="footer-col">
       <h4>Shop</h4>
@@ -540,10 +540,10 @@ function renderCartDrawer() {
   if (skus.length === 0) {
     body.innerHTML = `<div class="cart-drawer-empty">
       <h4>Noch leer</h4>
-      <p>Stöbern Sie im Sortiment oder starten Sie den Produktberater.</p>
+      <p>Schleifsegmente unten im Sortiment. Wenn Sie unsicher sind welches passt: drei Fragen im Berater geben Ihnen drei konkrete Vorschläge.</p>
     </div>`;
-    foot.innerHTML = `<a href="segmente.html" class="drawer-cta">Zu den Schleifsegmenten</a>
-      <a href="finder.html" class="drawer-cta-secondary">Produktberater starten</a>`;
+    foot.innerHTML = `<a href="index.html#produkte" class="drawer-cta">Zum Sortiment</a>
+      <a href="index.html#berater" class="drawer-cta-secondary">Berater öffnen</a>`;
     return;
   }
 
@@ -583,10 +583,10 @@ function renderCartDrawer() {
     staffelText = `<div class="cart-drawer-staffel success">✓ 8 % Staffelrabatt aktiv</div>`;
   } else if (totalCount >= 5) {
     discountPct = 5;
-    staffelText = `<div class="cart-drawer-staffel success">✓ 5 % Staffelrabatt aktiv (ab 10 Stk. 8 %)</div>`;
+    staffelText = `<div class="cart-drawer-staffel success">✓ 5 % Staffelrabatt aktiv. Ab 10 Stück werden es 8 %.</div>`;
   } else {
     const need = 5 - totalCount;
-    staffelText = `<div class="cart-drawer-staffel">Noch ${need} Artikel bis 5 % Staffelrabatt</div>`;
+    staffelText = `<div class="cart-drawer-staffel">Noch ${need} Artikel und Sie bekommen 5 % Staffelrabatt.</div>`;
   }
   const discountNet = subtotalNet * (discountPct / 100);
   const discountGross = subtotalGross * (discountPct / 100);
@@ -602,8 +602,8 @@ function renderCartDrawer() {
     ${staffelText}
     <div class="cart-drawer-summary total"><span class="label">Gesamt</span><span class="value">${formatEUR(displayTotal)}</span></div>
     <div class="cart-drawer-vat-hint">${vatLabel}</div>
-    <a href="warenkorb.html" class="drawer-cta">Zum Warenkorb &amp; Angebot anfordern</a>
-    <button class="drawer-cta-secondary" onclick="closeCartDrawer()">Weiter einkaufen</button>`;
+    <a href="warenkorb.html" class="drawer-cta">Angebot mit Lieferzeit anfordern</a>
+    <button class="drawer-cta-secondary" onclick="closeCartDrawer()">Erst weiterstöbern</button>`;
 }
 function cartChangeQtyDrawer(sku, delta) {
   const cart = getCart();
@@ -627,20 +627,20 @@ function renderNewsletterMarkup() {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
       <div class="newsletter-visual">
-        <span class="newsletter-visual-label">Neukunden-Vorteil</span>
+        <span class="newsletter-visual-label">Erstkunden-Konditionen</span>
         <div>
-          <div class="newsletter-discount">5&nbsp;%<small>auf Ihre erste Bestellung</small></div>
+          <div class="newsletter-discount">5&nbsp;%<small>auf Ihre Erstbestellung</small></div>
         </div>
       </div>
       <div class="newsletter-content">
-        <h2>Direkt vom Fachhändler.<br>5&nbsp;% bei der ersten Bestellung.</h2>
-        <p>Tragen Sie Ihre Geschäfts-E-Mail ein. Wir senden Ihnen den Rabattcode plus monatliche Hinweise zu neuen Werkzeugen, Aktionen und Husqvarna-Updates. Keine Werbeflut, jederzeit abbestellbar.</p>
+        <h2>Code in 60 Sekunden.<br>Brief alle vier Wochen.</h2>
+        <p>Geschäfts-E-Mail eintragen, Rabattcode kommt sofort. Danach ein Brief alle vier Wochen mit dem, was tatsächlich neu bei uns ist: neue Werkzeuge, Werkstatt-Aktionen, Husqvarna-Updates. Keine Werbeflut, keine generischen Newsletter, jederzeit abbestellbar.</p>
         <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter(this);">
           <input type="email" placeholder="ihre.firma@beispiel.de" required>
-          <button type="submit">Rabattcode anfordern</button>
+          <button type="submit">Code holen</button>
         </form>
-        <button class="newsletter-no-thanks" onclick="dismissNewsletter()">Nein danke, später vielleicht</button>
-        <p class="newsletter-fine">Mit Klick auf „Rabattcode anfordern" willigen Sie ein, dass wir Ihnen Werbe-E-Mails senden dürfen. Abmeldung jederzeit per Link in jeder E-Mail.</p>
+        <button class="newsletter-no-thanks" onclick="dismissNewsletter()">Nicht jetzt</button>
+        <p class="newsletter-fine">Mit Klick auf „Code holen" stimmen Sie zu, dass wir Ihnen den Rabattcode und die monatlichen Updates per E-Mail senden dürfen. Abmeldung über den Link in jeder Mail.</p>
       </div>
     </div>
   </div>`;

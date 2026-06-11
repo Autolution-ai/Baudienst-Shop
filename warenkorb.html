@@ -25,7 +25,7 @@
 <main>
   <div class="cat-header">
     <h1>Ihr Warenkorb</h1>
-    <p>Prüfen Sie Ihre Auswahl und fordern Sie ein <strong>Preisangebot mit Gewerbekonditionen</strong> an. Kein Login, kein Pflicht-Account. Antwort innerhalb von 24 Stunden.</p>
+    <p>Kein Login, kein Account. Sie senden uns die Position, wir bestätigen Verfügbarkeit, Lieferzeit und Gewerbekonditionen innerhalb von 24 Stunden. Bei Wiederkäufern in der Regel schneller.</p>
   </div>
 
   <div class="cart-layout" id="cartLayout">
@@ -36,8 +36,8 @@
 <!-- ANFRAGE-FORMULAR MODAL -->
 <div class="modal-backdrop" id="requestModal">
   <div class="modal">
-    <h2>Preisangebot anfordern</h2>
-    <p class="modal-sub">Wir melden uns innerhalb von 24h mit individuellem B2B-Angebot inkl. Staffelpreisen und Lieferzeit.</p>
+    <h2>Angebot mit Konditionen</h2>
+    <p class="modal-sub">Wir prüfen Verfügbarkeit, kalkulieren Staffelpreise und Skonto auf Ihre Position und melden uns innerhalb von 24 Stunden mit dem schriftlichen Angebot.</p>
     <form onsubmit="event.preventDefault(); submitRequest();">
       <label>Firma *</label>
       <input type="text" required placeholder="Mustermann GmbH">
@@ -74,11 +74,11 @@ function renderCart() {
   if (skus.length === 0) {
     layout.innerHTML = `
       <div class="cart-empty" style="grid-column: 1 / -1;">
-        <h2>Ihr Warenkorb ist leer</h2>
-        <p>Stöbern Sie durch unsere Schleifsegmente oder starten Sie den Produktberater.</p>
-        <a href="index.html#produkte" class="btn-primary">Zu den Schleifsegmenten</a>
+        <h2>Noch keine Position im Warenkorb</h2>
+        <p>Wenn Sie wissen, welche Segmente Sie brauchen, geht es schneller über das Sortiment. Bei Unsicherheit drei Fragen im Berater beantworten und drei passende Vorschläge holen.</p>
+        <a href="index.html#produkte" class="btn-primary">Sortiment ansehen</a>
         &nbsp;
-        <a href="finder.html" class="btn-secondary" style="background:#0D0D0D;color:white;">Produktberater starten</a>
+        <a href="index.html#berater" class="btn-secondary" style="background:#0D0D0D;color:white;">Berater starten</a>
       </div>`;
     return;
   }
@@ -139,7 +139,7 @@ function renderCart() {
     const need = 5 - totalCount;
     staffelBanner = `<div class="staffel-banner">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      <div>Noch <strong>${need} Artikel</strong> bis zum 5 %-Staffelrabatt. Ab 10 Stk.: 8 %.</div>
+      <div>Noch <strong>${need} Artikel</strong> und Sie bekommen 5 % Staffelrabatt. Ab zehn Stück werden es 8 %.</div>
     </div>`;
   }
 
@@ -167,13 +167,13 @@ function renderCart() {
       </div>
       <p class="summary-vat-hint">${vatLabel}</p>
       <button class="btn-primary" style="width:100%;justify-content:center;margin-top:20px;" onclick="openModal('requestModal')">
-        Preisangebot anfordern
+        Angebot mit Konditionen anfordern
       </button>
       <button class="btn-secondary" style="width:100%;justify-content:center;margin-top:8px;background:transparent;color:var(--text);border:1.5px solid var(--gray-border);" onclick="showToast('WhatsApp-Beratung wird geöffnet …')">
-        Per WhatsApp beraten lassen
+        Lieber kurz über WhatsApp klären
       </button>
       <p style="font-size:11.5px;color:var(--gray-mid);margin-top:14px;line-height:1.5;text-align:center;">
-        Kein Online-Checkout. Wir melden uns innerhalb von 24h mit individuellen B2B-Konditionen.
+        Bewusst kein Online-Checkout. So bekommen Sie Konditionen, die auf Ihre Position passen, statt einer Schaufenster-Rechnung.
       </p>
     </aside>`;
 }
@@ -191,7 +191,7 @@ function cartSetQty(sku, val) {
 }
 function submitRequest() {
   closeModal('requestModal');
-  showToast('<span>✓ Anfrage gesendet.</span> Wir melden uns innerhalb von 24h.');
+  showToast('<span>✓ Eingegangen.</span> Antwort folgt innerhalb 24 Stunden, meist schneller.');
   clearCart();
   renderCart();
 }
