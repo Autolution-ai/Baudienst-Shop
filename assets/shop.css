@@ -3755,3 +3755,98 @@ header {
   .chatbot-fab { right: 16px; bottom: 16px; }
   .chatbot-tease { width: 240px; }
 }
+
+/* ─────────────────────────────────────────────────────── */
+/* PDP Cross-Sell INLINE (in der linken Spalte unter Bild) */
+/* ─────────────────────────────────────────────────────── */
+.pdp-crosssell-inline {
+  margin-top: 18px;
+  background: var(--gray-bg);
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 14px 14px 8px;
+}
+.pdp-crosssell-inline h3 {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+.cross-list { display: grid; gap: 6px; }
+.cross-list-item {
+  display: grid;
+  grid-template-columns: 48px 1fr 32px;
+  gap: 12px;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 5px;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.cross-list-item:hover {
+  border-color: var(--red);
+  background: #FCFCFC;
+}
+.cross-list-item img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: var(--gray-bg);
+  border-radius: 3px;
+}
+.cross-list-info { min-width: 0; }
+.cross-list-bde {
+  display: inline-block;
+  background: var(--text);
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  border-left: 2px solid var(--red);
+  margin-bottom: 3px;
+}
+.cross-list-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cross-list-brand {
+  font-size: 10.5px;
+  color: var(--text-light);
+  margin-top: 1px;
+  letter-spacing: 0.04em;
+}
+.cross-list-price {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: var(--red) !important;
+  margin-top: 2px;
+}
+.cross-list-price small { display: none; }
+.cross-list-add {
+  width: 32px; height: 32px;
+  background: var(--red);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cross-list-add:hover { background: var(--red-light); }
+
+@media (max-width: 900px) {
+  .pdp-crosssell-inline { margin-top: 24px; }
+}

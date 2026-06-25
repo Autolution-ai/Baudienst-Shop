@@ -30,6 +30,12 @@
       <div class="gallery-main">
         <img id="mainImg" src="assets/products/_fallback.svg" alt="">
       </div>
+
+      <!-- Cross-Sells direkt unter dem Bild, above the fold -->
+      <div class="pdp-crosssell-inline" id="pdpCrossSellInline">
+        <h3>Häufig zusammen gekauft</h3>
+        <div class="cross-list" id="pdpCrossSellList"></div>
+      </div>
     </div>
 
     <div class="product-info" id="pdpInfo">
@@ -79,12 +85,6 @@
     </div>
   </div>
 
-  <!-- Cross-Sell -->
-  <div class="pdp-crosssell">
-    <h2>Wer das kauft, braucht meist auch</h2>
-    <p>Aus 18 Jahren Wiederkauf-Statistik in unserer Werkstatt.</p>
-    <div class="products-grid" id="pdpCrossSell"></div>
-  </div>
 </main>
 
 <div id="usp-mount"></div>
@@ -145,7 +145,7 @@ function renderPdp() {
     addToCart(sku, qty);
   };
 
-  renderCrossSellGrid(sku, 'pdpCrossSell');
+  renderCrossSellList(sku, 'pdpCrossSellList');
   applyPriceMode();
 }
 

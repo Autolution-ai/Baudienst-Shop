@@ -887,6 +887,35 @@ function renderCrossSellGrid(sku, containerId) {
   applyPriceMode();
 }
 
+function renderCrossSellList(sku, containerId) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  const skus = getCrossSells(sku);
+  if (!skus.length) {
+    const wrap = document.getElementById('pdpCrossSellInline');
+    if (wrap) wrap.style.display = 'none';
+    return;
+  }
+  c.innerHTML = skus.map(s => {
+    const p = PRODUCTS[s];
+    if (!p) return '';
+    const bde = p.isBDE ? '<span class="cross-list-bde">BDE</span>' : '';
+    return `<a class="cross-list-item" href="bohrkrone-detail.html?sku=${s}">
+      <img src="${p.img}" alt="${p.name}" onerror="this.style.opacity='0.3'">
+      <div class="cross-list-info">
+        ${bde}
+        <div class="cross-list-name">${p.short || p.name}</div>
+        <div class="cross-list-brand">${p.brand}</div>
+        <div class="cross-list-price" data-price-sku="${s}"></div>
+      </div>
+      <button class="cross-list-add" onclick="event.preventDefault(); event.stopPropagation(); addToCart('${s}')" aria-label="In den Warenkorb">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </a>`;
+  }).join('');
+  applyPriceMode();
+}
+
 function renderDrawerCrossSells() {
   const cart = getCart();
   const cartSkus = Object.keys(cart);
