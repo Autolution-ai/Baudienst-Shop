@@ -507,6 +507,11 @@ function renderHeader(activeNav) {
     <a href="index.html" class="logo logo-brand">
       <img src="assets/logo-compact.svg" alt="BAUDIENST Manfred Braunschweig GmbH" class="logo-img">
     </a>
+    <div class="header-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="headerSearch" type="text" placeholder="Bohrkrone, Schleiftopf, EZ H suchen…" autocomplete="off" oninput="searchUpdate(this.value)" onfocus="searchUpdate(this.value)" onblur="setTimeout(searchClose,180)">
+      <div class="header-search-results" id="headerSearchResults"></div>
+    </div>
     <nav class="main-nav">${nav}</nav>
     <div class="header-actions">
       <a href="tel:+493320920049" class="btn-phone">
@@ -563,10 +568,10 @@ function renderFooter() {
       <h4>Service</h4>
       <ul>
         <li><a href="index.html#werkstatt">Reparatur &amp; Wartung</a></li>
-        <li><a href="index.html#berater">Werkzeug-Berater</a></li>
+        <li><a href="finder.html">Werkzeug-Berater</a></li>
+        <li><a href="ratgeber.html">Ratgeber</a></li>
         <li><a href="#">Gewerbepreise</a></li>
         <li><a href="#">Versand &amp; Lieferung</a></li>
-        <li><a href="#">FAQ</a></li>
       </ul>
     </div>
     <div class="footer-col footer-contact">
@@ -1279,3 +1284,49 @@ initShop = function(activeNav) {
   _origInitShop(activeNav);
   initChatbotProactive();
 };
+
+/* ============================================================
+   HEADER SUCHE (Client-Side Fuzzy-Search über PRODUCTS)
+   ============================================================ */
+function searchUpdate(query) {
+  const out = document.getElementById('headerSearchResults');
+  if (!out) return;
+  const q = (query || '').trim().toLowerCase();
+  if (q.length < 2) { out.innerHTML = ''; out.classList.remove('show'); return; }
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const scored = ALL_SKUS.map(sku => {
+    const p = PRODUCTS[sku];
+    const hay = [p.name, p.brand, p.sku, p.short, p.desc, p.category, (p.material||[]).join(' '), p.mount || ''].join(' ').toLowerCase();
+    let score = 0;
+    tokens.forEach(t => {
+      if (hay.includes(t)) score += 2;
+      if (p.name.toLowerCase().includes(t)) score += 3;
+      if (p.sku.toLowerCase().includes(t)) score += 4;
+      if (p.brand.toLowerCase().includes(t)) score += 1;
+    });
+    return { sku, score };
+  }).filter(x => x.score > 0).sort((a,b) => b.score - a.score).slice(0, 5);
+
+  if (!scored.length) {
+    out.innerHTML = `<div class="search-empty">Kein Treffer für „${escapeHtml(query)}". Rufen Sie uns an unter 03320 / 2004-96, wir finden es im Lager.</div>`;
+    out.classList.add('show');
+    return;
+  }
+  out.innerHTML = scored.map(({ sku }) => {
+    const p = PRODUCTS[sku];
+    const bde = p.isBDE ? '<span class="search-bde">BDE</span>' : '';
+    return `<a class="search-result" href="bohrkrone-detail.html?sku=${sku}">
+      <img src="${p.img}" alt="">
+      <span class="search-result-info">
+        ${bde}
+        <strong>${p.short || p.name}</strong>
+        <em>${p.brand} · ${formatEUR(getPriceMode() === 'net' ? p.priceNet : p.priceGross)}</em>
+      </span>
+    </a>`;
+  }).join('');
+  out.classList.add('show');
+}
+function searchClose() {
+  const out = document.getElementById('headerSearchResults');
+  if (out) out.classList.remove('show');
+}
