@@ -524,12 +524,38 @@ function renderFooter() {
   </div></footer>`;
 }
 function renderWhatsAppFab() {
-  return `<div class="whatsapp-fab" onclick="showToast('WhatsApp-Chat wird geöffnet …')">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.025.507 3.934 1.395 5.608L0 24l6.537-1.37A11.942 11.942 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.853 0-3.597-.487-5.112-1.341l-.366-.217-3.793.994.995-3.692-.239-.38A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-    </svg>
-  </div>`;
+  // FAB ist jetzt der Chatbot, kein WhatsApp mehr
+  return renderChatbot();
+}
+function renderChatbot() {
+  return `<div class="chatbot-fab">
+    <div class="chatbot-tease" id="chatbotTease">
+      <button class="chatbot-tease-close" onclick="dismissChatbotTease(event)" aria-label="Schließen">×</button>
+      <div class="chatbot-tease-author">Christian aus der Werkstatt</div>
+      <div id="chatbotTeaseText">Hallo. Sehe Sie schauen sich Diamantwerkzeuge an. Soll ich Ihnen helfen das passende zu finden?</div>
+    </div>
+    <button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()" aria-label="Chat öffnen">
+      <span class="chatbot-pulse"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    </button>
+  </div>
+  <aside class="chatbot-window" id="chatbotWindow" aria-hidden="true">
+    <div class="chatbot-head">
+      <div class="chatbot-head-avatar">CB</div>
+      <div class="chatbot-head-text">
+        <div class="chatbot-head-name">Christian, Werkstatt-Berater</div>
+        <div class="chatbot-head-status">Antwort innerhalb Minuten</div>
+      </div>
+      <button class="chatbot-head-close" onclick="closeChatbot()" aria-label="Schließen">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="chatbot-body" id="chatbotBody"></div>
+    <div class="chatbot-foot">
+      <input id="chatbotInput" type="text" placeholder="Frage stellen…" onkeydown="chatbotSendOnEnter(event)">
+      <button onclick="chatbotSend()">Senden</button>
+    </div>
+  </aside>`;
 }
 function mountChrome(activeNav) {
   const tb = document.getElementById('topbar-mount');
@@ -903,3 +929,264 @@ function initShop(activeNav) {
   });
 }
 document.addEventListener('DOMContentLoaded', () => initShop(window.PAGE_NAV));
+
+/* ============================================================
+   CHATBOT (ersetzt WhatsApp-FAB)
+   ============================================================ */
+let chatbotState = { open: false, started: false, teased: false, wizard: { material: null, tool: null, mount: null }, history: [] };
+
+function toggleChatbot() {
+  const w = document.getElementById('chatbotWindow');
+  if (!w) return;
+  if (w.classList.contains('open')) {
+    closeChatbot();
+  } else {
+    openChatbot();
+  }
+}
+function openChatbot() {
+  const w = document.getElementById('chatbotWindow');
+  const t = document.getElementById('chatbotTease');
+  if (!w) return;
+  w.classList.add('open');
+  w.setAttribute('aria-hidden', 'false');
+  if (t) t.classList.remove('show');
+  chatbotState.open = true;
+  if (!chatbotState.started) {
+    chatbotState.started = true;
+    chatbotBoot();
+  }
+  setTimeout(() => document.getElementById('chatbotInput')?.focus(), 200);
+}
+function closeChatbot() {
+  const w = document.getElementById('chatbotWindow');
+  if (!w) return;
+  w.classList.remove('open');
+  w.setAttribute('aria-hidden', 'true');
+  chatbotState.open = false;
+}
+function dismissChatbotTease(e) {
+  if (e) e.stopPropagation();
+  const t = document.getElementById('chatbotTease');
+  if (t) t.classList.remove('show');
+  sessionStorage.setItem('chatbot_tease_dismissed', '1');
+}
+
+function chatbotBoot() {
+  chatbotPushBot('Guten Tag. Ich bin der Werkstatt-Berater bei Baudienst. Wenn Sie wissen welches Werkzeug Sie brauchen, suchen Sie direkt im Sortiment. Wenn nicht, leite ich Sie durch drei kurze Fragen.');
+  chatbotPushActions([
+    { label: 'Werkzeug finden in drei Fragen', action: () => chatbotStartWizard() },
+    { label: 'Eine konkrete Frage stellen', action: () => chatbotPushBot('Gerne. Stellen Sie Ihre Frage unten.') },
+    { label: 'Lieber anrufen 03320 / 2004-96', action: () => { window.location.href = 'tel:+493320920496'; } },
+  ]);
+}
+
+function chatbotPushBot(text) {
+  const body = document.getElementById('chatbotBody');
+  if (!body) return;
+  const el = document.createElement('div');
+  el.className = 'chatbot-msg bot';
+  el.textContent = text;
+  body.appendChild(el);
+  body.scrollTop = body.scrollHeight;
+}
+function chatbotPushUser(text) {
+  const body = document.getElementById('chatbotBody');
+  if (!body) return;
+  const el = document.createElement('div');
+  el.className = 'chatbot-msg user';
+  el.textContent = text;
+  body.appendChild(el);
+  body.scrollTop = body.scrollHeight;
+}
+function chatbotPushActions(actions) {
+  const body = document.getElementById('chatbotBody');
+  if (!body) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'chatbot-quick-actions';
+  actions.forEach(({ label, action }) => {
+    const b = document.createElement('button');
+    b.className = 'chatbot-quick';
+    b.textContent = label;
+    b.onclick = () => { chatbotPushUser(label); wrap.remove(); action(); };
+    wrap.appendChild(b);
+  });
+  body.appendChild(wrap);
+  body.scrollTop = body.scrollHeight;
+}
+
+function chatbotStartWizard() {
+  chatbotState.wizard = { material: null, tool: null, mount: null };
+  chatbotPushBot('Schritt 1 von 3: Was für ein Untergrund liegt vor?');
+  chatbotPushActions([
+    { label: 'Normalbeton', action: () => chatbotWizardStep(1, 'beton_normal') },
+    { label: 'Stahlbeton',  action: () => chatbotWizardStep(1, 'stahlbeton') },
+    { label: 'Altbeton',    action: () => chatbotWizardStep(1, 'beton_alt') },
+    { label: 'Mauerwerk',   action: () => chatbotWizardStep(1, 'mauerwerk') },
+    { label: 'Fliese',      action: () => chatbotWizardStep(1, 'fliese') },
+    { label: 'Estrich',     action: () => chatbotWizardStep(1, 'estrich_zement') },
+  ]);
+}
+function chatbotWizardStep(step, value) {
+  if (step === 1) {
+    chatbotState.wizard.material = value;
+    chatbotPushBot('Schritt 2 von 3: Welcher Werkzeugtyp?');
+    chatbotPushActions([
+      { label: 'Bohrkrone',     action: () => chatbotWizardStep(2, 'bohrkrone') },
+      { label: 'Trennscheibe',  action: () => chatbotWizardStep(2, 'trennscheibe') },
+      { label: 'Schleiftopf',   action: () => chatbotWizardStep(2, 'schleiftopf') },
+      { label: 'Dosensenker',   action: () => chatbotWizardStep(2, 'dosensenker') },
+      { label: 'Fliesenbohrer', action: () => chatbotWizardStep(2, 'fliesenbohrer') },
+    ]);
+  } else if (step === 2) {
+    chatbotState.wizard.tool = value;
+    chatbotPushBot('Schritt 3 von 3: Welche Aufnahme hat Ihre Maschine?');
+    chatbotPushActions([
+      { label: '1¼-7 UNC (Kernbohrgerät)', action: () => chatbotWizardStep(3, '1.25-7-UNC') },
+      { label: 'M14 (Winkelschleifer)',    action: () => chatbotWizardStep(3, 'M14') },
+      { label: 'SDS-Plus (Bohrhammer)',    action: () => chatbotWizardStep(3, 'SDS-Plus') },
+      { label: 'M16 (Dosensenker)',        action: () => chatbotWizardStep(3, 'M16') },
+    ]);
+  } else if (step === 3) {
+    chatbotState.wizard.mount = value;
+    chatbotShowWizardResult();
+  }
+}
+
+function chatbotShowWizardResult() {
+  // Recommendation aus dem bestehenden Wizard-Algorithmus
+  finderAnswers = { step1: chatbotState.wizard.material, step2: chatbotState.wizard.tool, step3: chatbotState.wizard.mount };
+  const skus = getFinderRecommendation();
+  window._finderResultSkus = skus;
+
+  chatbotPushBot('Drei Vorschläge aus dem Sortiment:');
+  const body = document.getElementById('chatbotBody');
+  if (!body) return;
+  const grid = document.createElement('div');
+  grid.style.display = 'grid';
+  grid.style.gap = '6px';
+  grid.style.marginBottom = '10px';
+  skus.slice(0, 3).forEach(sku => {
+    const p = PRODUCTS[sku];
+    if (!p) return;
+    const card = document.createElement('button');
+    card.style.cssText = 'display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;background:white;border:1px solid var(--gray-border);border-radius:6px;padding:8px;text-align:left;cursor:pointer;font-family:inherit;';
+    card.innerHTML = `<img src="${p.img}" style="width:42px;height:42px;object-fit:contain;background:var(--gray-bg);border-radius:3px;">
+      <span><strong style="display:block;font-size:12.5px;color:var(--text);font-weight:600;">${p.short || p.name}</strong>
+      <em style="font-style:normal;font-size:11.5px;color:var(--red);">${formatEUR(getPriceMode() === 'net' ? p.priceNet : p.priceGross)}</em></span>`;
+    card.onclick = () => { addToCart(sku); chatbotPushUser(`In den Warenkorb: ${p.short || p.name}`); chatbotPushBot('Gerne. Möchten Sie noch mehr Details?'); };
+    grid.appendChild(card);
+  });
+  body.appendChild(grid);
+  body.scrollTop = body.scrollHeight;
+
+  // AI-Berater-Erklärung direkt im Chatbot
+  chatbotPushBot('Einen Moment, ich erkläre kurz warum diese Auswahl…');
+  runChatbotAdvisor();
+}
+
+async function runChatbotAdvisor(question) {
+  const body = document.getElementById('chatbotBody');
+  if (!body) return;
+  const reply = document.createElement('div');
+  reply.className = 'chatbot-msg bot';
+  reply.innerHTML = '<span class="advisor-cursor">▍</span>';
+  body.appendChild(reply);
+  body.scrollTop = body.scrollHeight;
+
+  const wizard = chatbotState.wizard;
+  const suggestedSkus = window._finderResultSkus || [];
+  const relevantSkus = new Set(suggestedSkus);
+  suggestedSkus.forEach(s => getCrossSells(s).forEach(c => relevantSkus.add(c)));
+  const slimProducts = {};
+  relevantSkus.forEach(s => {
+    if (PRODUCTS[s]) slimProducts[s] = {
+      name: PRODUCTS[s].name, brand: PRODUCTS[s].brand, isBDE: !!PRODUCTS[s].isBDE,
+      priceGross: PRODUCTS[s].priceGross, qty: PRODUCTS[s].qty, desc: PRODUCTS[s].desc
+    };
+  });
+
+  try {
+    const res = await fetch('/api/advisor', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ wizard, suggestedSkus, products: slimProducts, question: question || null, history: chatbotState.history })
+    });
+    if (!res.body) {
+      const text = await res.text();
+      reply.textContent = text;
+      chatbotState.history.push({ role: 'assistant', content: text });
+      return;
+    }
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      reply.innerHTML = escapeHtml(buf) + '<span class="advisor-cursor">▍</span>';
+      body.scrollTop = body.scrollHeight;
+    }
+    reply.innerHTML = escapeHtml(buf);
+    chatbotState.history.push({ role: 'assistant', content: buf });
+  } catch (e) {
+    reply.textContent = 'Berater gerade nicht erreichbar. Rufen Sie 03320 / 2004-96.';
+  }
+}
+
+function chatbotSendOnEnter(e) { if (e.key === 'Enter') chatbotSend(); }
+function chatbotSend() {
+  const input = document.getElementById('chatbotInput');
+  if (!input) return;
+  const q = (input.value || '').trim();
+  if (!q) return;
+  input.value = '';
+  chatbotPushUser(q);
+  chatbotState.history.push({ role: 'user', content: q });
+  runChatbotAdvisor(q);
+}
+
+/* Proaktive Tease-Logik: nach 18 Sekunden Scroll/Verweil-Aktivität, einmal pro Session */
+function initChatbotProactive() {
+  if (sessionStorage.getItem('chatbot_tease_dismissed')) return;
+  if (sessionStorage.getItem('chatbot_tease_shown')) return;
+  let scrolled = 0;
+  let timer = null;
+  const trigger = () => {
+    if (sessionStorage.getItem('chatbot_tease_dismissed')) return;
+    if (chatbotState.open) return;
+    const t = document.getElementById('chatbotTease');
+    const textEl = document.getElementById('chatbotTeaseText');
+    if (!t || !textEl) return;
+    // Kontext-spezifische Nachricht
+    const hash = location.hash;
+    let msg = 'Hallo. Ich sehe Sie schauen sich Diamantwerkzeuge an. Soll ich Ihnen helfen das passende zu finden? Drei Fragen reichen.';
+    if (hash === '#bde')        msg = 'Die BDE-Linie kommt direkt aus unserer Werkstatt. Wenn Sie unsicher sind welche Körnung Sie brauchen, klicken Sie hier rein.';
+    if (hash === '#werkstatt')  msg = 'Reparatur-Anfrage? Schreiben Sie mir hier kurz Hersteller und Modell, dann gebe ich Ihnen eine grobe Lieferzeit.';
+    if (hash === '#berater')    msg = 'Schon dabei den Berater zu starten? Wenn Sie lieber tippen statt klicken: ich frage Sie alles per Chat.';
+    textEl.textContent = msg;
+    t.classList.add('show');
+    sessionStorage.setItem('chatbot_tease_shown', '1');
+  };
+  const onScroll = () => {
+    scrolled++;
+    if (scrolled === 1) {
+      timer = setTimeout(trigger, 18000);
+    }
+    if (scrolled > 6 && timer) {
+      clearTimeout(timer);
+      trigger();
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  // Fallback: nach 30s pure Verweildauer trotzdem zeigen
+  setTimeout(trigger, 30000);
+}
+
+// In initShop einklinken
+const _origInitShop = initShop;
+initShop = function(activeNav) {
+  _origInitShop(activeNav);
+  initChatbotProactive();
+};
