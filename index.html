@@ -26,13 +26,13 @@
 <div id="topbar-mount"></div>
 <header id="header-mount"></header>
 
-<!-- SHOP HERO mit Berater -->
+<!-- SHOP HERO klassisch, ohne eingebetteten Berater -->
 <section class="shop-hero">
   <div class="shop-hero-inner">
     <div class="shop-hero-text">
       <p class="hero-eyebrow">Husqvarna Vertragspartner · Caputh seit 1980</p>
-      <h1>Diamantwerkzeug bestellen.<br><em>Mit Berater statt Bauchgefühl.</em></h1>
-      <p>Bohrkronen, Trennscheiben, Schleiftöpfe und Dosensenker für die professionelle Baustelle. Wir führen die Sortimente von Husqvarna, ADT, Tyrolit und Bosch. Geht die Maschine kaputt, repariert sie der Betrieb, der sie verkauft hat.</p>
+      <h1>Diamantwerkzeug für die Baustelle.<br><em>Vom Fachhandel mit Werkstatt.</em></h1>
+      <p>Bohrkronen, Trennscheiben, Schleiftöpfe und Dosensenker von Husqvarna, ADT, Tyrolit, Bosch. Geht das Werkzeug kaputt, repariert es der Betrieb, der es verkauft hat.</p>
       <div class="shop-hero-signals">
         <span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -44,85 +44,54 @@
         </span>
         <span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Werkstatt im Haus, Holservice Brandenburg und Berlin
+          Holservice in Brandenburg und Berlin
         </span>
       </div>
       <div class="shop-hero-cta">
-        <a href="#produkte" class="btn-primary">Sortiment ansehen</a>
-        <a href="tel:+493320920496" class="btn-secondary-light">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-          Mit der Werkstatt sprechen
+        <a href="#produkte" class="btn-primary">Zum Sortiment</a>
+        <a href="finder.html" class="btn-secondary-light">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Berater starten
         </a>
       </div>
     </div>
 
-    <div class="shop-hero-advisor" id="berater">
-      <p class="finder-eyebrow">Werkzeug-Berater</p>
-      <h3 class="finder-title">Welches Diamantwerkzeug passt zu Ihrer Aufgabe?</h3>
-      <p class="finder-sub">Drei Fragen zu Untergrund, Werkzeugtyp und Maschinenaufnahme. Sie bekommen drei konkrete Vorschläge. Danach erklärt Ihnen unser KI-Berater, warum diese Auswahl Sinn ergibt.</p>
-
-      <div class="finder-step active" id="step1">
-        <div class="finder-step-indicator">
-          <div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div>
+    <!-- Rechte Seite: drei klare Einstiegs-Tiles statt Wizard -->
+    <div class="hero-entries">
+      <a class="hero-entry" href="?cat=bohrkrone#produkte">
+        <img src="assets/products/bk-nass-82.svg" alt="">
+        <div>
+          <strong>Bohrkronen</strong>
+          <span>6 Modelle ab 67,50 €</span>
         </div>
-        <p class="finder-question">Was für ein Untergrund liegt vor?</p>
-        <div class="finder-options">
-          <div class="finder-option" onclick="selectOption(1, 'beton_normal', this)"><span class="option-label">Normalbeton</span><span class="option-desc">Standard C20/25 bis C30/37</span></div>
-          <div class="finder-option" onclick="selectOption(1, 'stahlbeton', this)"><span class="option-label">Stahlbeton mit Armierung</span><span class="option-desc">Bewehrungsdurchführung</span></div>
-          <div class="finder-option" onclick="selectOption(1, 'beton_alt', this)"><span class="option-label">Altbeton</span><span class="option-desc">Über 5 Jahre, durchkarbonatisiert</span></div>
-          <div class="finder-option" onclick="selectOption(1, 'mauerwerk', this)"><span class="option-label">Mauerwerk</span><span class="option-desc">Ziegel, Kalksandstein, Porenbeton</span></div>
-          <div class="finder-option" onclick="selectOption(1, 'fliese', this)"><span class="option-label">Fliese / Feinsteinzeug</span><span class="option-desc">Glasur und Naturstein</span></div>
-          <div class="finder-option" onclick="selectOption(1, 'estrich_zement', this)"><span class="option-label">Zementestrich</span><span class="option-desc">Abrasiv, junger Beton</span></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <a class="hero-entry" href="?cat=trennscheibe#produkte">
+        <img src="assets/products/trennscheibe-230.svg" alt="">
+        <div>
+          <strong>Trennscheiben</strong>
+          <span>4 Modelle ab 42,00 €</span>
         </div>
-      </div>
-
-      <div class="finder-step" id="step2">
-        <div class="finder-step-indicator">
-          <div class="step-dot done"></div><div class="step-dot active"></div><div class="step-dot"></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <a class="hero-entry hero-entry-advisor" href="finder.html">
+        <div class="hero-entry-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
-        <p class="finder-question">Welcher Werkzeugtyp?</p>
-        <div class="finder-options">
-          <div class="finder-option" onclick="selectOption(2, 'bohrkrone', this)"><span class="option-label">Bohrkrone</span><span class="option-desc">Durchbruch, Kernbohrung</span></div>
-          <div class="finder-option" onclick="selectOption(2, 'trennscheibe', this)"><span class="option-label">Trennscheibe</span><span class="option-desc">Schnitte, Fugenarbeit</span></div>
-          <div class="finder-option" onclick="selectOption(2, 'schleiftopf', this)"><span class="option-label">Schleiftopf</span><span class="option-desc">Flächenabtrag, Vorbereitung</span></div>
-          <div class="finder-option" onclick="selectOption(2, 'dosensenker', this)"><span class="option-label">Dosensenker</span><span class="option-desc">UP-Installationsdosen</span></div>
-          <div class="finder-option" onclick="selectOption(2, 'fliesenbohrer', this)"><span class="option-label">Fliesenbohrer</span><span class="option-desc">Kleine Bohrungen in Glasur</span></div>
+        <div>
+          <strong>Werkzeug-Berater</strong>
+          <span>Drei Fragen, drei Vorschläge plus KI-Erklärung</span>
         </div>
-      </div>
-
-      <div class="finder-step" id="step3">
-        <div class="finder-step-indicator">
-          <div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot active"></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <a class="hero-entry" href="?bde=1#produkte">
+        <img src="assets/products/bde-klett-select.svg" alt="">
+        <div>
+          <strong>Hausmarke BDE</strong>
+          <span>6 Produkte aus eigener Werkstatt</span>
         </div>
-        <p class="finder-question">Welche Aufnahme hat Ihre Maschine?</p>
-        <div class="finder-options">
-          <div class="finder-option" onclick="selectOption(3, '1.25-7-UNC', this)"><span class="option-label">1¼-7 UNC</span><span class="option-desc">Kernbohrgeräte Husqvarna, Hilti</span></div>
-          <div class="finder-option" onclick="selectOption(3, 'M14', this)"><span class="option-label">M14</span><span class="option-desc">Winkelschleifer, Standard</span></div>
-          <div class="finder-option" onclick="selectOption(3, 'SDS-Plus', this)"><span class="option-label">SDS-Plus</span><span class="option-desc">Bohrhammer Bosch GBH, Hilti TE</span></div>
-          <div class="finder-option" onclick="selectOption(3, 'M16', this)"><span class="option-label">M16</span><span class="option-desc">Dosensenker, Trocken-Bohrkronen</span></div>
-        </div>
-      </div>
-
-      <div class="finder-result" id="finderResult">
-        <p class="result-label">✓ Ihre Vorschläge</p>
-        <div class="result-products" id="resultProducts"></div>
-
-        <div class="advisor-card">
-          <div class="advisor-card-header">
-            <span class="badge">KI</span>
-            <h4>Werkstatt-Berater erklärt Ihre Auswahl</h4>
-          </div>
-          <div class="advisor-output" id="advisorOutput"></div>
-          <div class="advisor-input-row">
-            <input id="advisorInput" type="text" placeholder="Noch eine Frage stellen, etwa: Was bei Trockenbohrung?" onkeydown="advisorAskFromInput(event)">
-            <button onclick="advisorAskFromInput()">Senden</button>
-          </div>
-          <p class="advisor-hint">Antworten basieren auf öffentlichen Hersteller-Daten und der Praxiserfahrung aus unserer Werkstatt. Bei Sonderfällen: 03320 / 2004-96.</p>
-        </div>
-
-        <button class="btn-finder-cart" onclick="addAllRecommendedToCart()">Alle in den Warenkorb</button>
-        <button class="btn-finder-restart" onclick="restartFinder()">↺ Neu starten</button>
-      </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
     </div>
   </div>
 </section>
@@ -164,6 +133,15 @@
 
 <!-- PRODUKT-GRID -->
 <main class="shop-main">
+  <div class="cat-banner" id="catBanner" style="display:none;">
+    <div class="cat-banner-inner">
+      <div>
+        <h2 id="catBannerTitle">Alle Produkte</h2>
+        <div class="cat-banner-sub" id="catBannerSub">Komplettes Sortiment</div>
+      </div>
+      <button class="cat-banner-reset" onclick="resetCategoryView()">Alle Kategorien anzeigen</button>
+    </div>
+  </div>
   <div class="products-grid" id="shopGrid"></div>
 </main>
 
@@ -229,6 +207,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   renderProductsGrid(ALL_SKUS, 'shopGrid');
+  if (typeof applyUrlRouting === 'function') applyUrlRouting();
   applyShopFilter();
 });
 </script>

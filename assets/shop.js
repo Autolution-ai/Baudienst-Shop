@@ -361,12 +361,72 @@ function applyFilter() {
    Filter-Achsen: material, application, bde
    ============================================================ */
 const shopState = { tab: 'all', material: null, application: null, bde: null };
-function setShopTab(cat) {
+
+const CAT_LABELS = {
+  all: { title: 'Alle Produkte', sub: 'Komplettes Sortiment' },
+  bohrkrone:    { title: 'Diamantbohrkronen', sub: 'Für Durchbrüche und Kernbohrungen in Beton, Stahlbeton und Mauerwerk' },
+  trennscheibe: { title: 'Diamanttrennscheiben', sub: 'Für Schnitte und Fugenarbeiten am Winkelschleifer oder Trennschleifer' },
+  schleiftopf:  { title: 'Diamantschleiftöpfe', sub: 'Für Flächenabtrag und Vorbereitungsarbeiten' },
+  dosensenker:  { title: 'Dosensenker', sub: 'Für Unterputz-Installationsdosen in Beton und Mauerwerk' },
+  fliesenbohrer:{ title: 'Fliesenbohrer', sub: 'Für Bohrungen in Glasur, Feinsteinzeug und Naturstein' },
+  maschine:     { title: 'Maschinen', sub: 'Kernbohrgeräte und Winkelschleifer' },
+  zubehoer:     { title: 'Zubehör', sub: 'Adapter, Zentrierbohrer und Kühlsysteme' }
+};
+
+function setShopTab(cat, opts) {
+  opts = opts || {};
   shopState.tab = cat;
   document.querySelectorAll('.shop-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.tab === cat);
   });
+  // Category-Banner aktualisieren
+  const banner = document.getElementById('catBanner');
+  if (banner) {
+    if (cat && cat !== 'all') {
+      const meta = CAT_LABELS[cat] || { title: cat, sub: '' };
+      document.getElementById('catBannerTitle').textContent = meta.title;
+      document.getElementById('catBannerSub').textContent = meta.sub;
+      banner.style.display = '';
+    } else if (shopState.bde) {
+      document.getElementById('catBannerTitle').textContent = 'Hausmarke BDE';
+      document.getElementById('catBannerSub').textContent = 'Eigene Schleifmittel-Linie von Baudienst, ausgelegt auf das was bei uns in der Werkstatt täglich verschleißt';
+      banner.style.display = '';
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+  // URL aktualisieren (nicht beim ersten Load)
+  if (!opts.silent) {
+    const params = new URLSearchParams();
+    if (cat && cat !== 'all') params.set('cat', cat);
+    if (shopState.bde) params.set('bde', '1');
+    const qs = params.toString();
+    const url = qs ? `?${qs}#produkte` : '#produkte';
+    history.replaceState(null, '', url);
+  }
   applyShopFilter();
+}
+
+function resetCategoryView() {
+  shopState.bde = null;
+  document.querySelectorAll('.shop-chip').forEach(b => b.classList.remove('active'));
+  setShopTab('all');
+}
+
+/* Bei Page-Load URL-Parameter auswerten */
+function applyUrlRouting() {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  const bde = params.get('bde');
+  if (bde === '1') {
+    shopState.bde = '1';
+    document.querySelectorAll('.shop-chip[data-chip-type="bde"]').forEach(b => b.classList.add('active'));
+  }
+  if (cat && cat !== 'all') {
+    setShopTab(cat, { silent: true });
+  } else if (shopState.bde) {
+    setShopTab('all', { silent: true });
+  }
 }
 function setShopFilter(type, value) {
   if (shopState[type] === value) shopState[type] = null;
@@ -433,11 +493,11 @@ function renderTopbar() {
 }
 function renderHeader(activeNav) {
   const items = [
-    { key: 'sortiment', label: 'Sortiment',         href: 'index.html#produkte' },
-    { key: 'bohrkrone', label: 'Bohrkronen',        href: 'index.html#produkte' },
-    { key: 'trenn',     label: 'Trennscheiben',     href: 'index.html#produkte' },
-    { key: 'bde',       label: 'Hausmarke BDE',     href: 'index.html#bde' },
-    { key: 'berater',   label: 'Berater',           href: 'index.html#berater' },
+    { key: 'sortiment', label: 'Sortiment',         href: 'index.html?cat=all#produkte' },
+    { key: 'bohrkrone', label: 'Bohrkronen',        href: 'index.html?cat=bohrkrone#produkte' },
+    { key: 'trenn',     label: 'Trennscheiben',     href: 'index.html?cat=trennscheibe#produkte' },
+    { key: 'bde',       label: 'Hausmarke BDE',     href: 'index.html?bde=1#produkte' },
+    { key: 'berater',   label: 'Berater',           href: 'finder.html' },
     { key: 'werkstatt', label: 'Werkstatt',         href: 'index.html#werkstatt' },
   ];
   const nav = items.map(i =>

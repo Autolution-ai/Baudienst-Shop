@@ -3850,3 +3850,229 @@ header {
 @media (max-width: 900px) {
   .pdp-crosssell-inline { margin-top: 24px; }
 }
+
+/* ─────────────────────────────────────────────────────── */
+/* HERO ENTRIES — Vier klare Einstiegspunkte rechts im Hero */
+/* ─────────────────────────────────────────────────────── */
+.hero-entries {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-content: start;
+}
+.hero-entry {
+  display: grid;
+  grid-template-columns: 60px 1fr 18px;
+  gap: 12px;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.hero-entry:hover {
+  border-color: var(--red);
+  transform: translateY(-1px);
+}
+.hero-entry img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background: var(--gray-bg);
+  border-radius: 4px;
+}
+.hero-entry-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--red);
+  color: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-entry strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.hero-entry span {
+  font-size: 11.5px;
+  color: var(--text-light);
+  line-height: 1.4;
+  display: block;
+}
+.hero-entry svg:last-child { color: var(--gray-mid); }
+.hero-entry-advisor {
+  background: linear-gradient(135deg, #FCEAE8 0%, #FFFFFF 100%);
+  border-color: var(--red);
+}
+.hero-entry-advisor strong { color: var(--red); }
+
+@media (max-width: 700px) {
+  .hero-entries { grid-template-columns: 1fr; }
+  .hero-entry img, .hero-entry-icon { width: 48px; height: 48px; }
+  .hero-entry { grid-template-columns: 48px 1fr 18px; }
+}
+
+/* ─────────────────────────────────────────────────────── */
+/* CATEGORY BANNER über dem Grid wenn Tab aktiv            */
+/* ─────────────────────────────────────────────────────── */
+.cat-banner {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-border);
+  padding: 18px 24px;
+  margin: 0 -24px;
+}
+.cat-banner-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.cat-banner h2 {
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  margin: 0;
+}
+.cat-banner-sub {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+.cat-banner-reset {
+  background: transparent;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+}
+.cat-banner-reset:hover { border-color: var(--red); color: var(--red); }
+
+/* Wenn Tab aktiv ist, Header-Tab als „aktiver Filter" hervorheben */
+.shop-tab.active { background: #FCEAE8; }
+
+/* ─────────────────────────────────────────────────────── */
+/* BERATER-PAGE als klassische helle Subpage              */
+/* ─────────────────────────────────────────────────────── */
+.berater-page {
+  background: var(--gray-bg);
+  padding: 32px 0 56px;
+  min-height: 50vh;
+  max-width: none;
+}
+.berater-page-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 32px;
+  align-items: start;
+}
+.berater-intro h1 {
+  font-size: 26px !important;
+  font-weight: 600 !important;
+  line-height: 1.2;
+  margin: 8px 0 14px;
+  color: var(--text);
+}
+.berater-intro p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+.berater-intro-points {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+}
+.berater-intro-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+.berater-intro-points svg { color: var(--success); flex-shrink: 0; margin-top: 3px; }
+
+.berater-card {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 28px;
+}
+.berater-card .finder-question { color: var(--text) !important; font-size: 15px; font-weight: 600 !important; margin-bottom: 14px; }
+.berater-card .finder-option {
+  background: var(--white) !important;
+  border: 1px solid var(--gray-border) !important;
+}
+.berater-card .finder-option:hover {
+  background: var(--gray-bg) !important;
+  border-color: var(--red) !important;
+}
+.berater-card .finder-option.selected {
+  background: #FCEAE8 !important;
+  border-color: var(--red) !important;
+}
+.berater-card .option-label { color: var(--text) !important; font-weight: 600 !important; }
+.berater-card .option-desc { color: var(--text-light) !important; }
+.berater-card .step-dot { background: var(--gray-border); }
+.berater-card .step-dot.done { background: var(--red); }
+.berater-card .step-dot.active { background: var(--text); }
+.berater-card .result-label { color: var(--red); font-size: 12px; }
+.berater-card .result-product {
+  background: var(--gray-bg) !important;
+  border: 1px solid var(--gray-border) !important;
+}
+.berater-card .result-product-name { color: var(--text) !important; }
+.berater-card .result-product-price { color: var(--red) !important; }
+.berater-card .result-product-qty { color: var(--text-light) !important; }
+.berater-card .advisor-card {
+  background: var(--gray-bg);
+  border: 1px solid var(--gray-border);
+  margin-top: 18px;
+}
+.berater-card .advisor-msg.advisor-assistant {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  color: var(--text);
+}
+.berater-card .advisor-msg.advisor-user {
+  background: #FCEAE8;
+  color: var(--text);
+  border-left-color: var(--red);
+}
+.berater-card .advisor-input-row input {
+  background: var(--white);
+  border-color: var(--gray-border);
+  color: var(--text);
+}
+.berater-card .advisor-input-row input::placeholder { color: var(--gray-mid); }
+.berater-card .advisor-hint { color: var(--gray-mid); }
+.berater-card .advisor-card-header h4 { color: var(--text); }
+.berater-card .btn-finder-cart {
+  background: var(--red) !important;
+  border-radius: 4px !important;
+  margin-top: 12px;
+}
+.berater-card .btn-finder-restart { color: var(--gray-mid); }
+
+@media (max-width: 800px) {
+  .berater-page-inner { grid-template-columns: 1fr; }
+  .berater-card { padding: 18px; }
+}
