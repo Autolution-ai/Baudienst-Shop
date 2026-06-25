@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Heller FLIESE Ø125">
+  <defs>
+  <radialGradient id="steel" cx="50%" cy="38%" r="62%">
+    <stop offset="0%" stop-color="#9C9C9C"/>
+    <stop offset="60%" stop-color="#4A4A4A"/>
+    <stop offset="100%" stop-color="#1F1F1F"/>
+  </radialGradient>
+  <linearGradient id="hub" x1="20%" y1="20%" x2="80%" y2="80%">
+    <stop offset="0%" stop-color="#6A6A6A"/>
+    <stop offset="100%" stop-color="#0D0D0D"/>
+  </linearGradient>
+  <radialGradient id="bronze" cx="50%" cy="38%" r="62%">
+    <stop offset="0%" stop-color="#C9A66B"/>
+    <stop offset="60%" stop-color="#9A7A3F"/>
+    <stop offset="100%" stop-color="#5C4520"/>
+  </radialGradient>
+  <linearGradient id="plastic" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#FB7140"/>
+    <stop offset="100%" stop-color="#A52213"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+    <feOffset dx="0" dy="8" result="off"/>
+    <feComponentTransfer><feFuncA type="linear" slope="0.32"/></feComponentTransfer>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+  <rect width="400" height="400" fill="#F5F5F5"/>
+  <ellipse cx="200" cy="310" rx="135" ry="12" fill="rgba(0,0,0,0.15)"/>
+    <circle cx="200" cy="190" r="130" fill="url(#steel)" filter="url(#shadow)"/>
+    <circle cx="200" cy="190" r="130" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="1"/><rect x="328" y="186" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(90.0 334 190)"/>
+  <rect x="315" y="244" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(115.71428571428572 321 248)"/>
+  <rect x="278" y="291" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(141.42857142857144 284 295)"/>
+  <rect x="224" y="317" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(167.14285714285714 230 321)"/>
+  <rect x="164" y="317" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(192.85714285714286 170 321)"/>
+  <rect x="110" y="291" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(218.57142857142858 116 295)"/>
+  <rect x="73" y="244" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(244.28571428571428 79 248)"/>
+  <rect x="60" y="186" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(270.0 66 190)"/>
+  <rect x="73" y="128" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(295.7142857142857 79 132)"/>
+  <rect x="110" y="81" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(321.42857142857144 116 85)"/>
+  <rect x="164" y="55" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(347.14285714285717 170 59)"/>
+  <rect x="224" y="55" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(372.8571428571429 230 59)"/>
+  <rect x="278" y="81" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(398.57142857142856 284 85)"/>
+  <rect x="315" y="128" width="12" height="14" rx="2" fill="#1E5BBF" transform="rotate(424.2857142857143 321 132)"/>
+  <line x1="319" y1="217" x2="297" y2="212" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="295" y1="266" x2="278" y2="252" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="253" y1="300" x2="243" y2="280" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="200" y1="312" x2="200" y2="290" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="147" y1="300" x2="157" y2="280" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="105" y1="266" x2="122" y2="252" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="81" y1="217" x2="103" y2="212" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="81" y1="163" x2="103" y2="168" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="105" y1="114" x2="122" y2="128" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="147" y1="80" x2="157" y2="100" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="200" y1="68" x2="200" y2="90" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="253" y1="80" x2="243" y2="100" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="295" y1="114" x2="278" y2="128" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <line x1="319" y1="163" x2="297" y2="168" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+  <circle cx="200" cy="190" r="30" fill="url(#hub)"/>
+    <circle cx="200" cy="190" r="22" fill="#0A0A0A"/>
+    <circle cx="200" cy="190" r="22" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <rect x="60" y="318" width="280" height="3" fill="#D62E20"/>
+  <text x="200" y="354" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="20" fill="#0D0D0D" letter-spacing="0.02em">FLIESE Ø125</text>
+  <text x="200" y="378" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="11" fill="#666" letter-spacing="0.22em">HELLER</text>
+</svg>

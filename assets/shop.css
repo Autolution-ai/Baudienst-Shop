@@ -3055,3 +3055,213 @@ footer {
 
 /* Topbar dot separator als Klein-Element */
 .promo-strip strong, .topbar strong { font-style: italic; }
+
+/* ─────────────────────────────────────────────────────── */
+/* DIAMANTWERKZEUG-SHOP — BDE Badge, AI-Berater, Cross-Sell */
+/* ─────────────────────────────────────────────────────── */
+
+/* BDE Hausmarken-Badge auf Produktkarten */
+.card-bde-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #0D0D0D;
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 3px;
+  border-left: 3px solid var(--red);
+  z-index: 2;
+}
+
+.result-product-bde {
+  display: inline-block;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+/* AI-Berater Card im Hero */
+.advisor-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 18px;
+}
+.advisor-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.advisor-card-header .badge {
+  background: var(--red);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+.advisor-card-header h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+.advisor-output {
+  max-height: 320px;
+  overflow-y: auto;
+  margin-bottom: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.advisor-msg {
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,0.88);
+}
+.advisor-msg.advisor-user {
+  background: rgba(255,255,255,0.08);
+  border-left: 2px solid var(--red);
+  margin-left: 12px;
+}
+.advisor-msg.advisor-assistant {
+  background: rgba(214,46,32,0.08);
+  border: 1px solid rgba(214,46,32,0.18);
+  color: white;
+}
+.advisor-msg.streaming { font-style: normal; }
+.advisor-cursor {
+  display: inline-block;
+  animation: advisor-blink 0.8s steps(2) infinite;
+  color: var(--red);
+  font-weight: 800;
+}
+@keyframes advisor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.advisor-input-row {
+  display: flex;
+  gap: 8px;
+}
+.advisor-input-row input {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 7px;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: white;
+  outline: none;
+}
+.advisor-input-row input::placeholder { color: rgba(255,255,255,0.4); }
+.advisor-input-row input:focus { border-color: var(--red); background: rgba(255,255,255,0.1); }
+.advisor-input-row button {
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.advisor-input-row button:hover { background: var(--red-light); }
+.advisor-hint {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Cross-Sell-Block im Cart-Drawer */
+.drawer-crosssell {
+  border-bottom: 1px solid var(--gray-border);
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+.drawer-crosssell h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+  margin-bottom: 10px;
+}
+.drawer-crosssell-item {
+  display: grid;
+  grid-template-columns: 44px 1fr 24px;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  background: var(--gray-bg);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.drawer-crosssell-item:hover {
+  border-color: var(--red);
+  background: white;
+}
+.drawer-crosssell-item img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  background: white;
+  border-radius: 4px;
+}
+.drawer-crosssell-item strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+.drawer-crosssell-item em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--gray-mid);
+}
+.drawer-crosssell-item svg { color: var(--red); }
+
+/* Erweiterte Shop-Chips (Material, Anwendung, BDE) */
+.shop-chip[data-chip-type="bde"].active,
+.shop-chip[data-chip-type="application"].active {
+  background: var(--black);
+  border-color: var(--black);
+}
+
+/* PDP Cross-Sell-Grid */
+.pdp-crosssell {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--gray-border);
+}
+.pdp-crosssell h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.pdp-crosssell p {
+  font-size: 13.5px;
+  color: var(--text-light);
+  margin-bottom: 22px;
+}

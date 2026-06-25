@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/api/advisor", "destination": "/api/advisor" }
+  ],
+  "functions": {
+    "api/advisor.js": {
+      "maxDuration": 30
+    }
+  }
+}

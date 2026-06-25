@@ -157,17 +157,23 @@ function renderProductCard(sku, opts) {
   opts = opts || {};
   const p = PRODUCTS[sku];
   if (!p) return '';
-  const compatBadge = (opts.showCompat && p.compat && p.compat.includes('PG 400'))
-    ? '<span class="card-compat-badge">Passt zu PG 400</span>' : '';
-  const url = p.url || 'pg400.html';
-  const dataAttrs = `data-sku="${sku}" data-usage="${(p.usage || []).join(',')}" data-goal="${(p.goal || []).join(',')}" data-cat="${p.category}"`;
-  // Fallback: hide img, show placeholder block with product short name + brand
+  const bdeBadge = p.isBDE ? '<span class="card-bde-badge">Hausmarke BDE</span>' : '';
+  const url = p.url || (p.category === 'bohrkrone' ? 'bohrkrone-detail.html?sku=' + sku : 'bohrkrone-detail.html?sku=' + sku);
+  const dataAttrs = [
+    `data-sku="${sku}"`,
+    `data-cat="${p.category}"`,
+    `data-material="${(p.material || []).join(',')}"`,
+    `data-bond="${p.bond || ''}"`,
+    `data-mount="${p.mount || ''}"`,
+    `data-application="${p.application || ''}"`,
+    `data-bde="${p.isBDE ? '1' : '0'}"`
+  ].join(' ');
   const fallbackJs = `this.style.display='none'; this.parentElement.classList.add('card-img-fallback');`;
   return `
     <div class="product-card" ${dataAttrs}>
       <a class="card-img" href="${url}" data-fallback-title="${(p.short || p.name).replace(/"/g, '&quot;')}" data-fallback-brand="${p.brand}">
         <img src="${p.img}" alt="${p.name}" onerror="${fallbackJs}">
-        ${compatBadge}
+        ${bdeBadge}
       </a>
       <div class="card-body">
         <p class="card-brand">${p.brand}</p>
@@ -214,9 +220,55 @@ function selectOption(step, value, el) {
 }
 
 function getFinderRecommendation() {
-  const key1 = finderAnswers.step1 || 'mittel';
-  const key2 = finderAnswers.step2 || 'schleifen';
-  return (RECOMMENDATIONS[key1] && RECOMMENDATIONS[key1][key2]) || RECOMMENDATIONS.mittel.schleifen;
+  const material = finderAnswers.step1;
+  const tool = finderAnswers.step2;
+  const mount = finderAnswers.step3;
+
+  // Score each product: 3 = perfekt, 2 = passend, 1 = möglich, 0 = ungeeignet
+  const scored = ALL_SKUS.map(sku => {
+    const p = PRODUCTS[sku];
+    let score = 0;
+    let reasons = 0;
+
+    // Werkzeugtyp match (hartes Kriterium)
+    if (tool && p.category === tool) {
+      score += 3; reasons++;
+    } else if (tool && p.category !== tool) {
+      return { sku, score: -1 };
+    }
+
+    // Material match
+    if (material && p.material && p.material.includes(material)) {
+      score += 2; reasons++;
+    } else if (material && p.material && p.material.length > 0) {
+      score -= 1;
+    }
+
+    // Aufnahme match
+    if (mount && p.mount === mount) {
+      score += 1; reasons++;
+    }
+
+    // Leicht zugunsten BDE bei gleichwertiger Eignung
+    if (p.isBDE) score += 0.25;
+
+    return { sku, score, reasons };
+  });
+
+  const top = scored
+    .filter(s => s.score >= 1)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(s => s.sku);
+
+  // Fallback wenn nichts wirklich passt: erste 3 Produkte der gewählten Kategorie
+  if (top.length === 0 && tool) {
+    return (SKUS_BY_CATEGORY[tool] || ALL_SKUS).slice(0, 3);
+  }
+  if (top.length === 0) {
+    return ALL_SKUS.slice(0, 3);
+  }
+  return top;
 }
 
 function showFinderResult() {
@@ -231,13 +283,21 @@ function showFinderResult() {
     if (!p) return '';
     const price = getPriceMode() === 'net' ? p.priceNet : p.priceGross;
     const label = getPriceMode() === 'net' ? 'netto' : 'inkl. MwSt.';
+    const bde = p.isBDE ? '<span class="result-product-bde">BDE</span>' : '';
     return `<div class="result-product" onclick="addToCart('${sku}')">
+      ${bde}
       <div class="result-product-name">${p.short || p.name}</div>
       <div class="result-product-price">${formatEUR(price)}</div>
       <div class="result-product-qty">${label} · ${p.qty}</div>
     </div>`;
   }).join('');
   document.getElementById('resultProducts').innerHTML = html;
+
+  // AI-Berater anstoßen, falls Block vorhanden
+  if (document.getElementById('advisorOutput')) {
+    resetAdvisor();
+    runAdvisor(null);
+  }
 }
 
 function addAllRecommendedToCart() {
@@ -297,20 +357,15 @@ function applyFilter() {
 }
 
 /* ============================================================
-   SHOP-NAV (Tabs + Chips auf der Startseite v3)
+   SHOP-NAV (Tabs + Chips auf der Startseite)
+   Filter-Achsen: material, application, bde
    ============================================================ */
-const shopState = { tab: 'all', usage: null, goal: null };
+const shopState = { tab: 'all', material: null, application: null, bde: null };
 function setShopTab(cat) {
   shopState.tab = cat;
   document.querySelectorAll('.shop-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.tab === cat);
   });
-  const chipsRow = document.getElementById('shopFilterChips');
-  if (chipsRow) {
-    const showChips = (cat === 'segment' || cat === 'all');
-    chipsRow.style.opacity = showChips ? '1' : '0.4';
-    chipsRow.style.pointerEvents = showChips ? 'auto' : 'none';
-  }
   applyShopFilter();
 }
 function setShopFilter(type, value) {
@@ -322,8 +377,9 @@ function setShopFilter(type, value) {
   applyShopFilter();
 }
 function resetShopFilter() {
-  shopState.usage = null;
-  shopState.goal = null;
+  shopState.material = null;
+  shopState.application = null;
+  shopState.bde = null;
   document.querySelectorAll('.shop-chip').forEach(b => b.classList.remove('active'));
   applyShopFilter();
 }
@@ -332,17 +388,11 @@ function applyShopFilter() {
   document.querySelectorAll('#shopGrid .product-card').forEach(card => {
     const cat = card.dataset.cat;
     const matchTab = shopState.tab === 'all' || cat === shopState.tab;
-    let matchChips = true;
-    if (cat === 'segment') {
-      const usage = (card.dataset.usage || '').split(',');
-      const goal = (card.dataset.goal || '').split(',');
-      const matchUsage = !shopState.usage || usage.includes(shopState.usage);
-      const matchGoal = !shopState.goal || goal.includes(shopState.goal);
-      matchChips = matchUsage && matchGoal;
-    } else if ((shopState.usage || shopState.goal) && shopState.tab === 'all') {
-      matchChips = false;
-    }
-    const show = matchTab && matchChips;
+    const cardMaterial = (card.dataset.material || '').split(',');
+    const matchMaterial = !shopState.material || cardMaterial.includes(shopState.material);
+    const matchApp = !shopState.application || card.dataset.application === shopState.application || card.dataset.application === 'beides';
+    const matchBde = !shopState.bde || card.dataset.bde === '1';
+    const show = matchTab && matchMaterial && matchApp && matchBde;
     card.style.display = show ? '' : 'none';
     if (show) visible++;
   });
@@ -383,11 +433,12 @@ function renderTopbar() {
 }
 function renderHeader(activeNav) {
   const items = [
-    { key: 'sortiment', label: 'Sortiment',       href: 'index.html#produkte' },
-    { key: 'segmente',  label: 'Schleifsegmente', href: 'index.html#produkte' },
-    { key: 'maschine',  label: 'Husqvarna PG 400',href: 'pg400.html' },
-    { key: 'berater',   label: 'Produktberater',  href: 'index.html#berater' },
-    { key: 'werkstatt', label: 'Werkstatt',       href: 'index.html#werkstatt' },
+    { key: 'sortiment', label: 'Sortiment',         href: 'index.html#produkte' },
+    { key: 'bohrkrone', label: 'Bohrkronen',        href: 'index.html#produkte' },
+    { key: 'trenn',     label: 'Trennscheiben',     href: 'index.html#produkte' },
+    { key: 'bde',       label: 'Hausmarke BDE',     href: 'index.html#bde' },
+    { key: 'berater',   label: 'Berater',           href: 'index.html#berater' },
+    { key: 'werkstatt', label: 'Werkstatt',         href: 'index.html#werkstatt' },
   ];
   const nav = items.map(i =>
     `<a href="${i.href}" class="${i.key === activeNav ? 'active' : ''}">${i.label}</a>`
@@ -439,12 +490,12 @@ function renderFooter() {
       <p class="footer-desc">Husqvarna-Vertragspartner für Diamantschleiftechnik, Betontechnik und Baugeräte. Werkstatt und Lager in Caputh, Versand bundesweit, Holservice in Brandenburg und Berlin.</p>
     </div>
     <div class="footer-col">
-      <h4>Shop</h4>
+      <h4>Sortiment</h4>
       <ul>
-        <li><a href="index.html#produkte">Sortiment</a></li>
-        <li><a href="pg400.html">Husqvarna PG 400</a></li>
-        <li><a href="index.html#produkte">Schleifsegmente</a></li>
-        <li><a href="index.html#produkte">Adapter &amp; Halter</a></li>
+        <li><a href="index.html#produkte">Alle Diamantwerkzeuge</a></li>
+        <li><a href="index.html#produkte">Bohrkronen</a></li>
+        <li><a href="index.html#produkte">Trennscheiben</a></li>
+        <li><a href="index.html#bde">Hausmarke BDE</a></li>
         <li><a href="warenkorb.html">Warenkorb</a></li>
       </ul>
     </div>
@@ -452,7 +503,7 @@ function renderFooter() {
       <h4>Service</h4>
       <ul>
         <li><a href="index.html#werkstatt">Reparatur &amp; Wartung</a></li>
-        <li><a href="index.html#berater">Produktberater</a></li>
+        <li><a href="index.html#berater">Werkzeug-Berater</a></li>
         <li><a href="#">Gewerbepreise</a></li>
         <li><a href="#">Versand &amp; Lieferung</a></li>
         <li><a href="#">FAQ</a></li>
@@ -596,7 +647,9 @@ function renderCartDrawer() {
   const displayTotal = mode === 'net' ? totalNet : totalGross;
   const vatLabel = mode === 'net' ? 'zzgl. 19 % MwSt.' : 'inkl. 19 % MwSt.';
 
+  const crossHtml = (typeof renderDrawerCrossSells === 'function') ? renderDrawerCrossSells() : '';
   foot.innerHTML = `
+    ${crossHtml}
     <div class="cart-drawer-summary"><span>Zwischensumme</span><strong>${formatEUR(displaySubtotal)}</strong></div>
     ${discountPct > 0 ? `<div class="cart-drawer-summary" style="color:var(--success);"><span>Staffelrabatt ${discountPct}&nbsp;%</span><strong>− ${formatEUR(mode === 'net' ? discountNet : discountGross)}</strong></div>` : ''}
     ${staffelText}
@@ -685,6 +738,157 @@ function mountChromeExtras() {
 }
 
 /* ============================================================
+   AI-BERATER (Streaming-Fetch zu /api/advisor)
+   ============================================================ */
+const advisorHistory = []; // {role, content}
+let advisorBusy = false;
+
+async function runAdvisor(question) {
+  if (advisorBusy) return;
+  const out = document.getElementById('advisorOutput');
+  if (!out) return;
+  advisorBusy = true;
+
+  const wizard = {
+    material: finderAnswers.step1,
+    tool: finderAnswers.step2,
+    mount: finderAnswers.step3,
+  };
+  const suggestedSkus = window._finderResultSkus || [];
+
+  // Echo user question into the conversation
+  if (question) {
+    const userMsg = document.createElement('div');
+    userMsg.className = 'advisor-msg advisor-user';
+    userMsg.textContent = question;
+    out.appendChild(userMsg);
+    advisorHistory.push({ role: 'user', content: question });
+  }
+
+  const reply = document.createElement('div');
+  reply.className = 'advisor-msg advisor-assistant streaming';
+  reply.innerHTML = '<span class="advisor-cursor">▍</span>';
+  out.appendChild(reply);
+  out.scrollTop = out.scrollHeight;
+
+  // Trim PRODUCTS payload to just the suggested ones plus their cross-sells
+  const relevantSkus = new Set(suggestedSkus);
+  suggestedSkus.forEach(s => getCrossSells(s).forEach(c => relevantSkus.add(c)));
+  const slimProducts = {};
+  relevantSkus.forEach(s => {
+    if (PRODUCTS[s]) slimProducts[s] = {
+      name: PRODUCTS[s].name,
+      brand: PRODUCTS[s].brand,
+      isBDE: !!PRODUCTS[s].isBDE,
+      priceGross: PRODUCTS[s].priceGross,
+      qty: PRODUCTS[s].qty,
+      desc: PRODUCTS[s].desc
+    };
+  });
+
+  try {
+    const res = await fetch('/api/advisor', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        wizard, suggestedSkus,
+        products: slimProducts,
+        question: question || null,
+        history: advisorHistory.slice(0, -1) // ohne die gerade gepushte Frage
+      })
+    });
+
+    if (!res.body) {
+      const text = await res.text();
+      reply.innerHTML = '';
+      reply.textContent = text;
+      advisorHistory.push({ role: 'assistant', content: text });
+      reply.classList.remove('streaming');
+      advisorBusy = false;
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      reply.innerHTML = escapeHtml(buffer) + '<span class="advisor-cursor">▍</span>';
+      out.scrollTop = out.scrollHeight;
+    }
+    reply.innerHTML = escapeHtml(buffer);
+    reply.classList.remove('streaming');
+    advisorHistory.push({ role: 'assistant', content: buffer });
+  } catch (e) {
+    reply.classList.remove('streaming');
+    reply.textContent = 'Berater gerade nicht erreichbar. Rufen Sie uns an unter 03320 / 2004-97, wir sind werktags 7 bis 17 Uhr für Sie da.';
+  } finally {
+    advisorBusy = false;
+  }
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+}
+
+function advisorAskFromInput(e) {
+  if (e && e.key && e.key !== 'Enter') return;
+  const input = document.getElementById('advisorInput');
+  if (!input) return;
+  const q = (input.value || '').trim();
+  if (!q) return;
+  input.value = '';
+  runAdvisor(q);
+}
+
+function resetAdvisor() {
+  advisorHistory.length = 0;
+  const out = document.getElementById('advisorOutput');
+  if (out) out.innerHTML = '';
+}
+
+/* ============================================================
+   CROSS-SELL RENDERING (PDP, Cart-Drawer)
+   ============================================================ */
+function renderCrossSellGrid(sku, containerId) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  const skus = getCrossSells(sku);
+  if (!skus.length) { c.innerHTML = ''; return; }
+  c.innerHTML = skus.map(s => renderProductCard(s)).join('');
+  applyPriceMode();
+}
+
+function renderDrawerCrossSells() {
+  const cart = getCart();
+  const cartSkus = Object.keys(cart);
+  if (cartSkus.length === 0) return '';
+  // collect unique cross-sells not already in cart
+  const set = new Set();
+  cartSkus.forEach(s => getCrossSells(s).forEach(c => {
+    if (!cart[c]) set.add(c);
+  }));
+  const top = Array.from(set).slice(0, 3);
+  if (!top.length) return '';
+  return `<div class="drawer-crosssell">
+    <h4>Vergessen Sie das nicht</h4>
+    ${top.map(s => {
+      const p = PRODUCTS[s]; if (!p) return '';
+      return `<button class="drawer-crosssell-item" onclick="addToCart('${s}')">
+        <img src="${p.img}" alt="">
+        <span>
+          <strong>${p.short || p.name}</strong>
+          <em>${formatEUR(getPriceMode() === 'net' ? p.priceNet : p.priceGross)}</em>
+        </span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>`;
+    }).join('')}
+  </div>`;
+}
+
+/* ============================================================
    INIT (auf jeder Seite aufrufen)
    ============================================================ */
 function initShop(activeNav) {
@@ -692,11 +896,10 @@ function initShop(activeNav) {
   mountChromeExtras();
   renderCartBadge();
   applyPriceMode();
+  if (typeof loadCrossSells === 'function') loadCrossSells();
   maybeShowNewsletter();
-  // ESC schließt Drawer / Newsletter
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') { closeCartDrawer(); dismissNewsletter(); }
   });
 }
-// Auto-init: page may set window.PAGE_NAV before this script loads
 document.addEventListener('DOMContentLoaded', () => initShop(window.PAGE_NAV));

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diamantwerkzeug · BAUDIENST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shop.css">
+<script>window.PAGE_NAV = 'sortiment';</script>
+</head>
+<body>
+
+<div id="topbar-mount"></div>
+<header id="header-mount"></header>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Shop</a>
+    <span class="sep">›</span>
+    <a href="index.html#produkte">Sortiment</a>
+    <span class="sep">›</span>
+    <span class="current" id="bc-current">Produkt</span>
+  </div>
+</div>
+
+<main id="pdpMain">
+  <div class="product-grid">
+    <div class="gallery">
+      <div class="gallery-main">
+        <img id="mainImg" src="assets/products/_fallback.svg" alt="">
+      </div>
+    </div>
+
+    <div class="product-info" id="pdpInfo">
+      <p class="product-brand" id="pdpBrand">Hersteller</p>
+      <h1 class="product-title" id="pdpTitle">Produkt</h1>
+      <p class="product-sku" id="pdpSku">Art.Nr. —</p>
+
+      <div class="divider"></div>
+
+      <div class="price-block">
+        <p class="price-net"><strong id="pdpNet">—</strong><em>€</em>&ensp;netto</p>
+        <p class="price-gross">inkl. 19 % MwSt.: <strong id="pdpGross">—</strong></p>
+        <div class="price-tag-b2b">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg>
+          Staffelpreise, Skonto und Rechnungskauf auf Anfrage
+        </div>
+      </div>
+
+      <p id="pdpDesc" style="font-size:14px;color:var(--text-light);line-height:1.6;margin-bottom:20px;"></p>
+
+      <div class="divider"></div>
+
+      <div class="qty-row">
+        <span class="qty-label">Menge</span>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <input class="qty-input" id="qtyInput" type="number" value="1" min="1">
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+
+      <div class="cta-group">
+        <button class="btn-add-cart" id="pdpAddCart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          In den Warenkorb
+        </button>
+        <button class="btn-request" onclick="showToast('Anfrage wird geöffnet …')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Angebot mit Lieferzeit anfordern
+        </button>
+      </div>
+
+      <div class="specs-section">
+        <p class="section-label">Technische Daten</p>
+        <div class="specs-grid" id="pdpSpecs"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cross-Sell -->
+  <div class="pdp-crosssell">
+    <h2>Wer das kauft, braucht meist auch</h2>
+    <p>Aus 18 Jahren Wiederkauf-Statistik in unserer Werkstatt.</p>
+    <div class="products-grid" id="pdpCrossSell"></div>
+  </div>
+</main>
+
+<div id="usp-mount"></div>
+<div id="footer-mount"></div>
+<div id="fab-mount"></div>
+
+<script src="assets/products.js"></script>
+<script src="assets/shop.js"></script>
+<script>
+function getSkuFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('sku') || 'bk-nass-82';
+}
+
+function renderPdp() {
+  const sku = getSkuFromUrl();
+  const p = PRODUCTS[sku];
+  if (!p) { document.getElementById('pdpMain').innerHTML = '<h2 style="text-align:center;padding:80px 20px;">Produkt nicht gefunden.</h2>'; return; }
+
+  document.getElementById('mainImg').src = p.img;
+  document.getElementById('mainImg').alt = p.name;
+  document.getElementById('bc-current').textContent = p.name;
+  document.title = p.name + ' · BAUDIENST';
+  document.getElementById('pdpBrand').textContent = p.brand + (p.isBDE ? ' · Hausmarke' : '');
+  document.getElementById('pdpTitle').textContent = p.name;
+  document.getElementById('pdpSku').innerHTML = `Art.Nr. <span>${p.sku}</span>`;
+  document.getElementById('pdpNet').textContent = p.priceNet.toLocaleString('de-DE', {minimumFractionDigits:2});
+  document.getElementById('pdpGross').textContent = formatEUR(p.priceGross);
+  document.getElementById('pdpDesc').textContent = p.desc;
+
+  const materialLabels = {
+    beton_normal: 'Normalbeton', beton_alt: 'Altbeton', beton_jung: 'Junger Beton',
+    stahlbeton: 'Stahlbeton', granit: 'Granit',
+    estrich_zement: 'Zementestrich', estrich_anhydrit: 'Anhydritestrich',
+    fliese: 'Fliese / Naturstein', mauerwerk: 'Mauerwerk', epoxid: 'Epoxidbeschichtung'
+  };
+  const bondLabels = {
+    geloetet: 'Gelötete Segmente', gelasert: 'Lasergeschweißt',
+    galvanisch: 'Galvanisch beschichtet', pcd: 'PCD / PKD'
+  };
+  const appLabels = { nass: 'Nass', trocken: 'Trocken', beides: 'Nass oder trocken' };
+
+  const specs = [];
+  if (p.diameter) specs.push(['Durchmesser', p.diameter + ' mm']);
+  if (p.mount) specs.push(['Aufnahme', p.mount.replace(/_/g, ' ').replace('1.25', '1¼')]);
+  if (p.bond) specs.push(['Bindung', bondLabels[p.bond] || p.bond]);
+  if (p.application) specs.push(['Einsatz', appLabels[p.application] || p.application]);
+  if (p.material && p.material.length) specs.push(['Geeignet für', p.material.map(m => materialLabels[m] || m).join(', ')]);
+  specs.push(['Inhalt', p.qty]);
+  specs.push(['Versand', 'Bis 14 Uhr bestellt, am gleichen Tag versandt']);
+
+  document.getElementById('pdpSpecs').innerHTML = specs.map(([k, v]) =>
+    `<div class="spec-item"><span class="spec-key">${k}</span><span class="spec-val">${v}</span></div>`
+  ).join('');
+
+  document.getElementById('pdpAddCart').onclick = () => {
+    const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+    addToCart(sku, qty);
+  };
+
+  renderCrossSellGrid(sku, 'pdpCrossSell');
+  applyPriceMode();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof loadCrossSells === 'function') {
+    loadCrossSells().then(renderPdp).catch(renderPdp);
+  } else {
+    renderPdp();
+  }
+});
+</script>
+</body>
+</html>

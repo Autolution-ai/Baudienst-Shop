@@ -1,0 +1,44 @@
+{
+  "comment": "Kuratierte Cross-Sell-Matrix. Pro SKU 2 bis 3 Verknüpfungen. Logik: das was der Käufer in der gleichen Bestellung oder beim Folgebesuch typisch dazukauft. Wird in Produktseiten, Cart-Drawer und AI-Berater verwendet.",
+  "bk-nass-52": ["adapter-1-25-m18", "kuehladapter", "wasserkuehlmittel"],
+  "bk-nass-82": ["adapter-1-25-m18", "kuehladapter", "wasserkuehlmittel"],
+  "bk-nass-112": ["adapter-1-25-m18", "maschine-kernbohr", "wasserkuehlmittel"],
+  "bk-nass-152": ["maschine-kernbohr", "adapter-1-25-m18", "kuehladapter"],
+  "bk-trocken-50": ["adapter-1-25-m18", "zentrierbohrer-50"],
+  "bk-trocken-82": ["adapter-1-25-m18", "ds-82"],
+  "bk-armierung-72": ["maschine-kernbohr", "kuehladapter"],
+  "bk-armierung-122": ["maschine-kernbohr", "kuehladapter", "adapter-1-25-m18"],
+
+  "ts-beton-230": ["maschine-winkelschleifer", "ts-fliese-125"],
+  "ts-beton-300": ["maschine-trennschleifer", "wasserkuehlmittel"],
+  "ts-asphalt-400": ["maschine-trennschleifer", "wasserkuehlmittel"],
+  "ts-fliese-125": ["maschine-winkelschleifer", "fb-galvanisch-set"],
+  "ts-universal-115": ["maschine-winkelschleifer", "ts-beton-230"],
+
+  "st-doppelreihe-125": ["maschine-winkelschleifer", "bde-schleifteller-225"],
+  "st-doppelreihe-180": ["maschine-winkelschleifer", "bde-klett-select-225"],
+  "st-einreihe-125": ["maschine-winkelschleifer", "bde-klett-select-225"],
+  "st-pcd-125": ["maschine-winkelschleifer", "st-doppelreihe-125"],
+
+  "ds-68": ["zentrierbohrer-50", "bk-trocken-82"],
+  "ds-82": ["zentrierbohrer-50", "bk-trocken-82"],
+
+  "fb-galvanisch-6": ["fb-galvanisch-set", "wasserkuehlmittel"],
+  "fb-galvanisch-set": ["wasserkuehlmittel", "ts-fliese-125"],
+
+  "maschine-kernbohr": ["bk-nass-82", "bk-nass-112", "adapter-1-25-m18"],
+  "maschine-trennschleifer": ["ts-beton-300", "ts-asphalt-400"],
+  "maschine-winkelschleifer": ["ts-beton-230", "st-doppelreihe-125"],
+
+  "adapter-1-25-m18": ["bk-nass-82", "kuehladapter"],
+  "zentrierbohrer-50": ["bk-trocken-50", "ds-68"],
+  "kuehladapter": ["wasserkuehlmittel", "bk-nass-82"],
+  "wasserkuehlmittel": ["kuehladapter", "bk-nass-82"],
+
+  "bde-schleifstift-6": ["bde-schleifstift-10", "maschine-winkelschleifer"],
+  "bde-schleifstift-10": ["bde-schleifstift-6", "bde-schleifteller-225"],
+  "bde-klett-select-225": ["bde-klett-fleece-225", "bde-schleifteller-225"],
+  "bde-klett-fleece-225": ["bde-klett-select-225", "bde-klett-gitter-225"],
+  "bde-klett-gitter-225": ["bde-klett-select-225", "bde-schleifteller-225"],
+  "bde-schleifteller-225": ["bde-klett-select-225", "bde-klett-fleece-225"]
+}

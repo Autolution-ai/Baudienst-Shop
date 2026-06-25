@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produktberater Schleifsegmente · BAUDIENST</title>
-<meta name="description" content="Finden Sie in 3 Fragen das richtige Diamant-Schleifsegment für Ihr Projekt.">
+<title>Werkzeug-Berater · BAUDIENST</title>
+<meta name="description" content="Drei Fragen, drei konkrete Werkzeug-Vorschläge plus KI-Erklärung warum diese passen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/shop.css">
@@ -15,17 +15,17 @@
   <a href="index.html" class="logo logo-brand">
     <img src="assets/logo-compact.svg" alt="BAUDIENST Manfred Braunschweig GmbH" style="height:44px;background:white;padding:6px 10px;border-radius:4px;">
   </a>
-  <a href="tel:+493320920049">
+  <a href="tel:+493320920496">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-    03320 / 2004-97
+    03320 / 2004-96
   </a>
 </div>
 
 <div class="finder-page-body">
   <div class="finder-page-card finder-card" style="background:transparent;padding:40px;">
-    <p class="finder-eyebrow">Schleifsegment-Berater</p>
-    <h1 class="finder-title">Welches Segment passt zu Ihrem Boden?</h1>
-    <p class="finder-sub">Drei Fragen zu Untergrund, Ziel und Projektgröße. Sie bekommen drei Vorschläge, die für genau diese Kombination ausgelegt sind. Wenn keiner stimmt, sagen Sie uns warum. Wir tauschen aus.</p>
+    <p class="finder-eyebrow">Werkzeug-Berater · KI gestützt</p>
+    <h1 class="finder-title">Welches Diamantwerkzeug passt zu Ihrer Aufgabe?</h1>
+    <p class="finder-sub">Drei Fragen. Drei konkrete Vorschläge aus dem Sortiment. Plus eine kurze Erklärung von unserem KI-Berater, warum diese Auswahl Sinn ergibt.</p>
 
     <div class="finder-step active" id="step1">
       <div class="finder-step-indicator">
@@ -33,10 +33,12 @@
       </div>
       <p class="finder-question">Was für ein Untergrund liegt vor?</p>
       <div class="finder-options">
-        <div class="finder-option" onclick="selectOption(1, 'weich', this)"><span class="option-label">Weich / Abrasiv</span><span class="option-desc">Junger Beton, Estrich</span></div>
-        <div class="finder-option" onclick="selectOption(1, 'mittel', this)"><span class="option-label">Mittlere Härte</span><span class="option-desc">Normaler Beton</span></div>
-        <div class="finder-option" onclick="selectOption(1, 'hart', this)"><span class="option-label">Hart / Sehr hart</span><span class="option-desc">Altbeton, Granit</span></div>
-        <div class="finder-option" onclick="selectOption(1, 'beschichtet', this)"><span class="option-label">Beschichtet</span><span class="option-desc">Epoxid, Kleber, Lacke</span></div>
+        <div class="finder-option" onclick="selectOption(1, 'beton_normal', this)"><span class="option-label">Normalbeton</span><span class="option-desc">C20/25 bis C30/37</span></div>
+        <div class="finder-option" onclick="selectOption(1, 'stahlbeton', this)"><span class="option-label">Stahlbeton</span><span class="option-desc">Mit Armierung</span></div>
+        <div class="finder-option" onclick="selectOption(1, 'beton_alt', this)"><span class="option-label">Altbeton</span><span class="option-desc">Über 5 Jahre</span></div>
+        <div class="finder-option" onclick="selectOption(1, 'mauerwerk', this)"><span class="option-label">Mauerwerk</span><span class="option-desc">Ziegel, Kalksandstein</span></div>
+        <div class="finder-option" onclick="selectOption(1, 'fliese', this)"><span class="option-label">Fliese</span><span class="option-desc">Feinsteinzeug, Naturstein</span></div>
+        <div class="finder-option" onclick="selectOption(1, 'estrich_zement', this)"><span class="option-label">Estrich</span><span class="option-desc">Zementbasis, abrasiv</span></div>
       </div>
     </div>
 
@@ -44,12 +46,12 @@
       <div class="finder-step-indicator">
         <div class="step-dot done"></div><div class="step-dot active"></div><div class="step-dot"></div>
       </div>
-      <p class="finder-question">Welcher Arbeitsschritt steht an?</p>
+      <p class="finder-question">Welcher Werkzeugtyp?</p>
       <div class="finder-options">
-        <div class="finder-option" onclick="selectOption(2, 'abtrag', this)"><span class="option-label">Grobes Abtragen</span><span class="option-desc">Kleber, alte Schichten</span></div>
-        <div class="finder-option" onclick="selectOption(2, 'schleifen', this)"><span class="option-label">Feinschleifen</span><span class="option-desc">Vorbereitung, Glattziehen</span></div>
-        <div class="finder-option" onclick="selectOption(2, 'polieren', this)"><span class="option-label">Polieren</span><span class="option-desc">Hochglanz, Versiegelung</span></div>
-        <div class="finder-option" onclick="selectOption(2, 'renovierung', this)"><span class="option-label">Flächenrenovierung</span><span class="option-desc">Untergrundvorbereitung</span></div>
+        <div class="finder-option" onclick="selectOption(2, 'bohrkrone', this)"><span class="option-label">Bohrkrone</span><span class="option-desc">Durchbruch, Kernbohrung</span></div>
+        <div class="finder-option" onclick="selectOption(2, 'trennscheibe', this)"><span class="option-label">Trennscheibe</span><span class="option-desc">Schnitte, Fugen</span></div>
+        <div class="finder-option" onclick="selectOption(2, 'schleiftopf', this)"><span class="option-label">Schleiftopf</span><span class="option-desc">Flächenabtrag</span></div>
+        <div class="finder-option" onclick="selectOption(2, 'dosensenker', this)"><span class="option-label">Dosensenker</span><span class="option-desc">UP-Dosen</span></div>
       </div>
     </div>
 
@@ -57,21 +59,35 @@
       <div class="finder-step-indicator">
         <div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot active"></div>
       </div>
-      <p class="finder-question">Wie groß wird die Fläche?</p>
+      <p class="finder-question">Welche Aufnahme hat Ihre Maschine?</p>
       <div class="finder-options">
-        <div class="finder-option" onclick="selectOption(3, 'klein', this)"><span class="option-label">Klein (&lt; 50 m²)</span><span class="option-desc">Einzelräume, Terrassen</span></div>
-        <div class="finder-option" onclick="selectOption(3, 'mittel', this)"><span class="option-label">Mittel (50–300 m²)</span><span class="option-desc">Hallen, Gewerberäume</span></div>
-        <div class="finder-option" onclick="selectOption(3, 'gross', this)"><span class="option-label">Groß (&gt; 300 m²)</span><span class="option-desc">Industriehallen, Lager</span></div>
-        <div class="finder-option" onclick="selectOption(3, 'dauereinsatz', this)"><span class="option-label">Dauerbetrieb</span><span class="option-desc">Regelmäßige Projekte</span></div>
+        <div class="finder-option" onclick="selectOption(3, '1.25-7-UNC', this)"><span class="option-label">1¼-7 UNC</span><span class="option-desc">Kernbohrgeräte</span></div>
+        <div class="finder-option" onclick="selectOption(3, 'M14', this)"><span class="option-label">M14</span><span class="option-desc">Winkelschleifer</span></div>
+        <div class="finder-option" onclick="selectOption(3, 'SDS-Plus', this)"><span class="option-label">SDS-Plus</span><span class="option-desc">Bohrhammer</span></div>
+        <div class="finder-option" onclick="selectOption(3, 'M16', this)"><span class="option-label">M16</span><span class="option-desc">Dosensenker, Trocken</span></div>
       </div>
     </div>
 
     <div class="finder-result" id="finderResult">
-      <p class="result-label">✓ Ihre Empfehlung</p>
+      <p class="result-label">✓ Ihre Vorschläge</p>
       <div class="result-products" id="resultProducts"></div>
+
+      <div class="advisor-card" style="margin-top:18px;">
+        <div class="advisor-card-header">
+          <span class="badge">KI</span>
+          <h4>Werkstatt-Berater erklärt</h4>
+        </div>
+        <div class="advisor-output" id="advisorOutput"></div>
+        <div class="advisor-input-row">
+          <input id="advisorInput" type="text" placeholder="Noch eine Frage stellen" onkeydown="advisorAskFromInput(event)">
+          <button onclick="advisorAskFromInput()">Senden</button>
+        </div>
+        <p class="advisor-hint">Antworten basieren auf öffentlichen Hersteller-Daten und Werkstatt-Praxis. Bei Sonderfällen: 03320 / 2004-96.</p>
+      </div>
+
       <div class="finder-result-actions">
         <button class="btn-finder-cart" onclick="addAllRecommendedToCart(); setTimeout(() => location.href='warenkorb.html', 800);">Alle in den Warenkorb</button>
-        <button class="btn-finder-secondary" onclick="location.href='pg400.html'">Zur passenden PG 400 →</button>
+        <button class="btn-finder-secondary" onclick="location.href='index.html#produkte'">Zum Sortiment →</button>
       </div>
       <button class="btn-finder-restart" onclick="restartFinder()">↺ Neu starten</button>
     </div>

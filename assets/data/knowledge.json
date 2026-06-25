@@ -1,0 +1,210 @@
+{
+  "version": "1.0",
+  "purpose": "Wissensbasis für den Baudienst Werkstatt-Berater. Wird als Kontext an die Anthropic-API übergeben. Quellen: öffentliche Datenblätter Husqvarna Construction, ADT Diamanttechnik, Tyrolit, Bosch Professional, Heller, Eibenstock.",
+  "company": {
+    "name": "BAUDIENST Manfred Braunschweig GmbH",
+    "ort": "Caputh, Brandenburg",
+    "telefon": "03320 / 2004-97",
+    "seit": 1980,
+    "rolle": "Husqvarna-Vertragspartner, Werkstatt im Haus, Holservice Brandenburg und Berlin",
+    "hausmarke": "BDE — eigene Schleifmittel-Linie für Estrich-Schleifgeräte und Verbrauchsmaterial",
+    "anfrage_statt_checkout": "Bestellungen laufen als Anfrage. Antwort innerhalb 24 Stunden mit Verfügbarkeit, Lieferzeit und Konditionen."
+  },
+  "materialien": {
+    "beton_jung": {
+      "label": "Junger Beton (unter 30 Tage)",
+      "haerte": "weich",
+      "abrasivitaet": "hoch",
+      "empfehlung_bindung": "hart",
+      "praxis_hinweis": "Junger Beton enthält noch Restfeuchte und freie Zementpartikel. Weiche Bindungen verschleißen extrem schnell. Harte Bindungen halten."
+    },
+    "beton_normal": {
+      "label": "Normalbeton C20/25 bis C30/37",
+      "haerte": "mittel",
+      "abrasivitaet": "mittel",
+      "empfehlung_bindung": "mittel",
+      "praxis_hinweis": "Standardfall für die meisten Bauprojekte. Mittlere Bindung in Kombination mit Standard-Drehzahl."
+    },
+    "beton_alt": {
+      "label": "Altbeton (über 5 Jahre)",
+      "haerte": "hart",
+      "abrasivitaet": "niedrig",
+      "empfehlung_bindung": "weich",
+      "praxis_hinweis": "Über die Jahre durchkarbonatisiert, hohe Festigkeit. Weiche Bindung sorgt für freischneidende Diamanten und längere Standzeit."
+    },
+    "stahlbeton": {
+      "label": "Stahlbeton mit Armierung",
+      "haerte": "hart_armiert",
+      "abrasivitaet": "niedrig_bis_mittel",
+      "empfehlung_bindung": "gelaserte_segmente_oder_weiche_bindung",
+      "praxis_hinweis": "Armierungseisen ist der Killer für viele Bindungen. Gelaserte Segmente vertragen den Wechsel zwischen Beton und Stahl deutlich besser als gelötete. Für Bohrungen quer durch Armierung: spezielle Armierungs-Bohrkronen wählen."
+    },
+    "hochfest_beton": {
+      "label": "Hochfest-Beton C50/60 und höher",
+      "haerte": "sehr_hart",
+      "abrasivitaet": "sehr_niedrig",
+      "empfehlung_bindung": "weich_aggressiv",
+      "praxis_hinweis": "Sehr glatte Oberfläche, Diamanten stumpfen schnell. Weichste verfügbare Bindung wählen, sonst Standzeit-Einbruch."
+    },
+    "granit": {
+      "label": "Granit, Hartgestein",
+      "haerte": "sehr_hart",
+      "abrasivitaet": "sehr_niedrig",
+      "empfehlung_bindung": "weich",
+      "kuehlung": "wasser_pflicht",
+      "praxis_hinweis": "Naturhart, kaum Abrasion. Ohne Wasserkühlung verbrennen die Diamanten in unter einer Minute."
+    },
+    "estrich_zement": {
+      "label": "Zementestrich",
+      "haerte": "weich",
+      "abrasivitaet": "hoch",
+      "empfehlung_bindung": "hart",
+      "praxis_hinweis": "Hoher Quarzanteil macht Estrich abrasiv. BDE-Eigenmarke ist auf diese Anwendung ausgelegt."
+    },
+    "estrich_anhydrit": {
+      "label": "Anhydritestrich",
+      "haerte": "sehr_weich",
+      "abrasivitaet": "mittel",
+      "empfehlung_bindung": "mittel_bis_hart",
+      "praxis_hinweis": "Wesentlich weicher als Zementestrich, niedrigere Drehzahl wählen sonst zu starker Abtrag."
+    },
+    "fliese": {
+      "label": "Fliesen, Feinsteinzeug, Naturstein-Belag",
+      "haerte": "sehr_hart_oberflaeche",
+      "abrasivitaet": "sehr_niedrig",
+      "empfehlung_werkzeug": "fliesenbohrer_galvanisch_oder_dosensenker",
+      "kuehlung": "wasser_empfohlen",
+      "praxis_hinweis": "Glasur ist sehr hart, Scherbe darunter weicher. Galvanische Bohrer halten lang, müssen aber langsam angesetzt werden um nicht zu rutschen."
+    },
+    "mauerwerk": {
+      "label": "Mauerwerk Ziegel, Kalksandstein, Porenbeton",
+      "haerte": "weich_bis_mittel",
+      "abrasivitaet": "mittel",
+      "empfehlung_bindung": "mittel",
+      "praxis_hinweis": "Hohle Steine erfordern Schlagunterstützung. Bei Porenbeton: zu hohe Drehzahl reißt das Material."
+    },
+    "epoxid": {
+      "label": "Epoxidbeschichtung, Kleberreste, Lacke",
+      "haerte": "klebrig",
+      "empfehlung_werkzeug": "pcd_segmente",
+      "praxis_hinweis": "Diamant-Bindungen verkleben. PCD-Schleifsegmente sind hier die einzige sinnvolle Wahl."
+    }
+  },
+  "werkzeugtypen": {
+    "diamantbohrkrone_nass": {
+      "label": "Diamant-Kernbohrkrone, Nassbohrung",
+      "anwendung": "Durchbrüche in Beton, Stahlbeton, Mauerwerk für Rohre, Kabel, Lüftung",
+      "durchmesser_typisch": "25 bis 350 mm",
+      "aufnahme_typisch": "1¼-7 UNC, R½ Zoll, M18, M16",
+      "drehzahl_richtwert": "Drehzahl nimmt mit größerem Durchmesser ab. Faustregel: Schnittgeschwindigkeit 2 bis 5 m/s am Außendurchmesser.",
+      "kuehlung": "Wasser unter Druck zwingend",
+      "praxis_warnung": "Trocken ist nicht zulässig. Diamanten verbrennen."
+    },
+    "diamantbohrkrone_trocken": {
+      "label": "Diamant-Kernbohrkrone, Trockenbohrung",
+      "anwendung": "Mauerwerk, Kalksandstein, Porenbeton, Leichtbeton ohne Wasseranschluss",
+      "durchmesser_typisch": "25 bis 200 mm",
+      "aufnahme_typisch": "M16, 1¼-7 UNC, SDS-Max für kleine Durchmesser",
+      "kuehlung": "Trockenbohrung mit Staubabsaugung",
+      "praxis_warnung": "Nicht für Stahlbeton geeignet. Armierung zerstört Trocken-Bohrkronen."
+    },
+    "diamanttrennscheibe_beton": {
+      "label": "Diamant-Trennscheibe für Beton und Stein",
+      "anwendung": "Trennarbeiten an Beton, Mauerwerk, Pflastersteinen",
+      "durchmesser_typisch": "115, 125, 230, 300, 350, 400 mm",
+      "aufnahme_typisch": "M14 für Winkelschleifer, 22,23 mm Bohrung für Trennschleifer",
+      "praxis_hinweis": "Segmenthöhe verrät Restlebensdauer. Neue Scheiben haben 10 bis 15 mm Segmenthöhe. Unter 3 mm tauschen."
+    },
+    "diamanttrennscheibe_asphalt": {
+      "label": "Diamant-Trennscheibe für Asphalt und abrasive Materialien",
+      "anwendung": "Asphalt, frischer Beton, Sandstein",
+      "durchmesser_typisch": "300, 350, 400 mm",
+      "praxis_warnung": "Andere Bindung als Beton-Scheiben. Falsche Wahl frisst die Scheibe in Minuten auf."
+    },
+    "diamantschleiftopf": {
+      "label": "Diamant-Schleiftopf",
+      "anwendung": "Abtragen von Beton-Erhebungen, Putzresten, Estrich-Glätten",
+      "durchmesser_typisch": "115 bis 180 mm",
+      "aufnahme_typisch": "M14",
+      "form": "doppelreihig oder einreihig, Pyramiden- oder Boomerang-Profil",
+      "praxis_hinweis": "Doppelreihig für aggressiveren Abtrag, einreihig für gleichmäßigere Oberfläche."
+    },
+    "dosensenker": {
+      "label": "Diamant-Dosensenker für Steckdosen und Installationsdosen",
+      "anwendung": "Unterputzdosen für Elektroinstallation",
+      "durchmesser_typisch": "68 mm Standard für UP-Dosen, 82 mm für tiefe Dosen",
+      "aufnahme_typisch": "M16, SDS-Plus",
+      "praxis_hinweis": "Trocken im Mauerwerk, mit Wasser im Beton. Zentrierbohrer ist Pflicht."
+    },
+    "fliesenbohrer": {
+      "label": "Diamant-Fliesenbohrer galvanisch",
+      "anwendung": "Bohrungen in Fliesen, Feinsteinzeug, Naturstein, Glas",
+      "durchmesser_typisch": "5 bis 80 mm",
+      "praxis_hinweis": "Bei galvanischen Bohrern wird der Diamant auf den Trägerkörper aufgalvanisiert. Sehr universell aber höherer Verschleiß. Mit Wasser kühlen für längere Standzeit."
+    },
+    "diamantschleifteller": {
+      "label": "Diamant-Schleifteller mit Klett oder Polyester",
+      "anwendung": "Feinschliff Beton, Naturstein, Estrich-Vorbereitung",
+      "durchmesser_typisch": "125, 178, 225 mm",
+      "praxis_hinweis": "Körnungen K16 bis K3000. K16 bis K60 für Abtrag, K100 bis K400 für Vorschliff, K800 plus für Polierdurchgänge."
+    },
+    "diamantschleifstift": {
+      "label": "Diamant-Schleifstift für Kantenbearbeitung",
+      "anwendung": "Kantenbruch, kleine Konturen, Nacharbeit an Bohrungen",
+      "durchmesser_typisch": "6, 8, 10 mm Schaft",
+      "praxis_hinweis": "BDE-Eigenmarke für Beton- und Abrasiv-Varianten. Sehr lange Standzeit bei niedriger Drehzahl."
+    }
+  },
+  "bindungstypen": {
+    "geloetet": {
+      "label": "Gelötete Segmente",
+      "eigenschaft": "Thermisch begrenzt, benötigt Wasserkühlung. Schlagbeanspruchung (Armierung) gut verträglich. Segment ist in voller Höhe nutzbar.",
+      "wann": "Standardwahl für Nassbohrungen und Naßschnitte"
+    },
+    "gelasert": {
+      "label": "Lasergeschweißte Segmente",
+      "eigenschaft": "Thermisch hoch belastbar. Trocken- und Nassbetrieb möglich. Höhere Schnittgeschwindigkeit möglich.",
+      "wann": "Trockenarbeiten, Stahlbeton, dort wo Trocken-Nass-Wechsel auftritt"
+    },
+    "galvanisch": {
+      "label": "Galvanisch beschichtet",
+      "eigenschaft": "Diamantstaub auf Trägerkörper aufgebracht. Sehr universell, jedoch begrenzte Standzeit. Bei Abnutzung ist das Werkzeug erschöpft.",
+      "wann": "Fliesenbohrer, kleine Schleifstifte, Spezialformen mit kleinem Durchmesser"
+    },
+    "pcd": {
+      "label": "PCD oder PKD (polykristalliner Diamant)",
+      "eigenschaft": "Geometrisch geschliffene Diamantblöcke. Sehr aggressiv, kaum Abnutzung. Empfindlich gegen Schlag.",
+      "wann": "Epoxid, Kleberreste, Beschichtungen abtragen. Nicht für Stahlbeton."
+    }
+  },
+  "aufnahmen": {
+    "M14": "Standard für Winkelschleifer und Hand-Schleifer bis 230 mm Scheibendurchmesser",
+    "5/8-11_UNC": "Zollgewinde für US-Geräte und einige Husqvarna-Schleifer",
+    "1.25-7_UNC": "Standardgewinde für Kernbohrgeräte (Husqvarna DM 230, Hilti DD 150, DD 200)",
+    "R_1/2_Zoll": "Rohrgewinde für ältere Kernbohrgeräte",
+    "M18": "Häufig bei kleinen Bohrkronen für Diamantbohrgeräte mit Schnellwechsel-System",
+    "M16": "Dosensenker und Diamantbohrkronen mit SDS-Adapter",
+    "SDS_Plus": "Standard für Bohrhämmer Bosch GBH 2, Hilti TE 2",
+    "SDS_Max": "Schwere Bohrhämmer, Kernbohrungen bis 80 mm im Mauerwerk"
+  },
+  "praxis_konflikte": {
+    "armierung_in_stahlbeton": "Gelaserte Segmente oder spezielle Armierungs-Bohrkronen wählen. Standard-Nass-Bohrkronen reißen die Segmente ab.",
+    "polierter_beton_hochfest": "Weichste Bindung. Drehzahl reduzieren. Geringerer Anpressdruck als Lehrbuch sagt.",
+    "fliese_mit_zementbett_dahinter": "Galvanischer Fliesenbohrer vorne, dann auf Diamant-Bohrkrone wechseln sobald die Glasur durch ist.",
+    "epoxid_auf_beton_abtragen": "PCD-Segment für Epoxid, danach normales Schleifsegment für Beton-Schliff. Werkzeugwechsel statt Kompromiss.",
+    "porenbeton_durchbruch": "Trocken-Bohrkrone mit niedriger Drehzahl. Zu schnell reißt das Material aus.",
+    "winkelschleifer_fuer_trennarbeiten": "Maximal 230 mm Scheibendurchmesser. Größer braucht Trennschleifer mit eigener Aufnahme."
+  },
+  "kuehlung": {
+    "wasser_pflicht": ["diamantbohrkrone_nass", "trennscheibe_grosse_tiefe", "granit"],
+    "wasser_empfohlen": ["fliese", "stahlbeton_bohrung", "naturstein"],
+    "trocken_moeglich": ["trennscheiben_mauerwerk_kurz", "kleine_bohrkronen_porenbeton", "schleifstifte"]
+  },
+  "antwort_disziplin": {
+    "tonalitaet": "Sie-Form, B2B-Profis, trockenes Trade-Deutsch. Kurze Sätze gemischt mit erklärenden, niemals zu chatty.",
+    "verbotene_phrasen": ["natürlich helfe ich gerne", "absolut", "großartig", "im heutigen", "es ist wichtig zu beachten"],
+    "bei_unsicherheit": "Statt zu raten den Anruf empfehlen: Für Ihre Konfiguration ist ein kurzer Anruf sinnvoller, 03320 / 2004-97. Wir prüfen das vor Versand.",
+    "bei_verfuegbarkeit": "Nie eine Bestätigung der Verfügbarkeit erfinden. Verweis auf Anfrage und 24-Stunden-Antwort.",
+    "bde_praeferenz": "Bei gleichwertiger Eignung BDE-Eigenmarke leicht bevorzugen, ohne aufdringlich zu wirken."
+  }
+}
