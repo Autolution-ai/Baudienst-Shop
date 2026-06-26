@@ -1067,11 +1067,17 @@ function dismissChatbotTease(e) {
 }
 
 function chatbotBoot() {
-  chatbotPushBot('Guten Tag. Ich bin der Werkstatt-Berater bei Baudienst. Wenn Sie wissen welches Werkzeug Sie brauchen, suchen Sie direkt im Sortiment. Wenn nicht, leite ich Sie durch drei kurze Fragen.');
+  chatbotState.wizard = { material: null, tool: null, mount: null };
+  chatbotPushBot('Guten Tag. Damit ich Ihnen das passende Werkzeug zeige: Was für ein Untergrund?');
   chatbotPushActions([
-    { label: 'Werkzeug finden in drei Fragen', action: () => chatbotStartWizard() },
-    { label: 'Eine konkrete Frage stellen', action: () => chatbotPushBot('Gerne. Stellen Sie Ihre Frage unten.') },
-    { label: 'Lieber anrufen 03320 / 2004-96', action: () => { window.location.href = 'tel:+493320920496'; } },
+    { label: 'Normalbeton',     action: () => chatbotWizardStep(1, 'beton_normal') },
+    { label: 'Stahlbeton',      action: () => chatbotWizardStep(1, 'stahlbeton') },
+    { label: 'Altbeton',        action: () => chatbotWizardStep(1, 'beton_alt') },
+    { label: 'Mauerwerk',       action: () => chatbotWizardStep(1, 'mauerwerk') },
+    { label: 'Fliese',          action: () => chatbotWizardStep(1, 'fliese') },
+    { label: 'Estrich',         action: () => chatbotWizardStep(1, 'estrich_zement') },
+    { label: 'Nur eine Frage',  action: () => chatbotPushBot('Gerne. Stellen Sie Ihre Frage unten im Eingabefeld.') },
+    { label: 'Lieber anrufen',  action: () => { window.location.href = 'tel:+493320920496'; } },
   ]);
 }
 
