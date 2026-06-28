@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Widerruf · BAUDIENST</title>
+<meta name="description" content="Widerrufsbelehrung und Online-Widerrufsformular nach §312g BGB. Bestellung aus dem Baudienst-Shop in 14 Tagen widerrufen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shop.css">
+<script>window.PAGE_NAV = null;</script>
+</head>
+<body>
+
+<div id="topbar-mount"></div>
+<header id="header-mount"></header>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Shop</a>
+    <span class="sep">›</span>
+    <a href="widerruf.html">Widerruf</a>
+    <span class="sep">›</span>
+    <span class="current">Bestellung widerrufen</span>
+  </div>
+</div>
+
+<main class="article-page">
+  <article class="article-body">
+    <header class="article-head">
+      <p class="article-eyebrow">§312g BGB · 14-Tage-Widerrufsrecht</p>
+      <h1>Bestellung widerrufen</h1>
+      <p class="article-lead">Verbraucher haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen vom Vertrag zurückzutreten. Hier können Sie das vorgeschriebene Online-Formular direkt absenden. Wir bestätigen den Eingang umgehend und melden uns innerhalb 14 Tagen.</p>
+    </header>
+
+    <h2>Wer kann widerrufen</h2>
+    <p>Das Widerrufsrecht gilt für Verbraucher im Sinne des §13 BGB. Unternehmer und Gewerbetreibende, die mit USt-IdNr. oder als juristische Person bestellen, fallen nicht unter den gesetzlichen Widerruf. Für Gewerbekunden gilt unsere Rückgabe-Regelung nach Vereinbarung, die wir vor jedem Kauf bestätigen.</p>
+
+    <h2>Was wir brauchen</h2>
+    <p>Für den schnellen Widerruf reichen Bestellnummer, Datum und Ihre Kontaktdaten. Das Formular unten erfüllt die Vorgaben aus Anlage 2 zu Art. 246a §1 Abs. 2 Satz 1 Nr. 1 EGBGB.</p>
+
+    <form class="widerruf-form" onsubmit="event.preventDefault(); submitWiderruf(this);">
+      <h3>Online-Widerrufsformular</h3>
+
+      <p class="widerruf-formal">An BAUDIENST Manfred Braunschweig GmbH, Im Gewerbepark 20, 14548 Schwielowsee:<br>
+      Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren.</p>
+
+      <div class="widerruf-row">
+        <label>Bestellnummer *
+          <input type="text" required placeholder="z.B. 2026-01234">
+        </label>
+        <label>Bestelldatum *
+          <input type="date" required>
+        </label>
+      </div>
+
+      <div class="widerruf-row">
+        <label>Eingangsdatum der Ware *
+          <input type="date" required>
+        </label>
+        <label>Widerrufsdatum *
+          <input type="date" required value="">
+        </label>
+      </div>
+
+      <label>Bezeichnung der Ware *
+        <textarea required rows="3" placeholder="z.B. Diamant-Kernbohrkrone D 1245 82 mm, Art.Nr. BK-N-082, 2 Stück"></textarea>
+      </label>
+
+      <h3>Ihre Kontaktdaten</h3>
+      <div class="widerruf-row">
+        <label>Name *
+          <input type="text" required placeholder="Vor- und Nachname">
+        </label>
+        <label>E-Mail *
+          <input type="email" required placeholder="ihre@adresse.de">
+        </label>
+      </div>
+
+      <label>Anschrift *
+        <textarea required rows="2" placeholder="Straße, PLZ, Ort"></textarea>
+      </label>
+
+      <label>Grund des Widerrufs (freiwillig)
+        <textarea rows="2" placeholder="Optional. Hilft uns Prozesse zu verbessern."></textarea>
+      </label>
+
+      <div class="widerruf-actions">
+        <button type="submit" class="btn-primary">Widerruf absenden</button>
+        <a href="index.html" class="btn-secondary-light" style="color: var(--text); background: var(--white); border: 1px solid var(--gray-border);">Abbrechen</a>
+      </div>
+
+      <p class="widerruf-note">Mit dem Absenden erhalten Sie eine Bestätigung per E-Mail. Wir bestätigen den Eingang innerhalb 24 Stunden und veranlassen die Rückerstattung innerhalb 14 Tagen nach Rückgang der Ware in unserem Lager. Versandkosten der Rücksendung tragen Sie gemäß §357 Abs. 6 BGB selbst, außer die Lieferung war fehlerhaft.</p>
+    </form>
+
+    <h2>Was nach dem Absenden passiert</h2>
+    <ul class="article-list">
+      <li>Wir bestätigen den Eingang Ihres Widerrufs binnen 24 Stunden per E-Mail mit Rücksendelabel</li>
+      <li>Sie senden die Ware an: BAUDIENST, Im Gewerbepark 20, 14548 Schwielowsee</li>
+      <li>Sobald die Ware bei uns eingeht, prüfen wir den Zustand</li>
+      <li>Die Rückerstattung erfolgt über den ursprünglichen Zahlungsweg innerhalb 14 Tagen ab Rückerhalt</li>
+    </ul>
+
+    <h2>Ausnahmen vom Widerrufsrecht</h2>
+    <p>Für individuell auf Wunsch konfigurierte Werkzeuge (Sonderdurchmesser, Spezialbindungen außerhalb des Katalogs) sowie für versiegelte Verbrauchsgüter ist das Widerrufsrecht nach §312g Abs. 2 BGB ausgeschlossen. Bei Unsicherheit klären Sie das gerne vorher mit uns: 03320 / 2004-96.</p>
+  </article>
+
+  <aside class="article-sidebar">
+    <div class="sidebar-card">
+      <h4>Schneller per Telefon</h4>
+      <p style="font-size:13px;color:var(--text-light);line-height:1.5;margin-bottom:14px;">In den meisten Fällen klärt ein Anruf den Fall in fünf Minuten. Wir prüfen Verfügbarkeit eines Austauschs, alternative Größen oder Reparatur.</p>
+      <a href="tel:+493320920496" class="btn-primary" style="display:block;text-align:center;text-decoration:none;">03320 / 2004-96</a>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Rechtliche Hinweise</h4>
+      <ul class="sidebar-related-list">
+        <li>Widerrufsfrist 14 Tage ab Erhalt</li>
+        <li>Wertersatz nur bei Gebrauchsspuren</li>
+        <li>Versandkosten der Rücksendung: Käufer</li>
+        <li>Ausnahmen: Sonderanfertigungen</li>
+      </ul>
+    </div>
+  </aside>
+</main>
+
+<div id="usp-mount"></div>
+<div id="footer-mount"></div>
+<div id="fab-mount"></div>
+
+<script src="assets/products.js"></script>
+<script src="assets/shop.js"></script>
+<script>
+function submitWiderruf(form) {
+  form.reset();
+  showToast('<span>✓ Widerruf eingegangen.</span> Bestätigung folgt per E-Mail innerhalb 24 Stunden.');
+  setTimeout(() => location.href = 'index.html', 2200);
+}
+</script>
+</body>
+</html>

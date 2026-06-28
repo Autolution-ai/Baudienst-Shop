@@ -585,7 +585,7 @@ function renderFooter() {
   </div>
   <div class="footer-bottom">
     <span>© 2024 BAUDIENST Manfred Braunschweig GmbH · Caputh</span>
-    <span>Impressum &nbsp;·&nbsp; Datenschutz &nbsp;·&nbsp; AGB &nbsp;·&nbsp; Widerrufsbelehrung</span>
+    <span>Impressum &nbsp;·&nbsp; Datenschutz &nbsp;·&nbsp; AGB &nbsp;·&nbsp; <a href="widerruf.html">Widerruf</a></span>
   </div></footer>`;
 }
 function renderWhatsAppFab() {
@@ -612,7 +612,7 @@ function renderChatbot() {
         <div class="chatbot-head-name">Christian, Werkstatt-Berater</div>
         <div class="chatbot-head-status">Antwort innerhalb Minuten</div>
       </div>
-      <button class="chatbot-head-close" onclick="closeChatbot()" aria-label="Schließen">
+      <button class="chatbot-head-close" onclick="closeChatbotDismiss()" aria-label="Schließen">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
@@ -1065,6 +1065,7 @@ function dismissChatbotTease(e) {
   const t = document.getElementById('chatbotTease');
   if (t) t.classList.remove('show');
   sessionStorage.setItem('chatbot_tease_dismissed', '1');
+  sessionStorage.setItem('chatbot_dismissed_session', '1');
 }
 
 function chatbotBoot() {
@@ -1248,13 +1249,23 @@ function chatbotSend() {
   runChatbotAdvisor(q);
 }
 
-/* Proaktive Logik: Tease → Auto-Open des Chats, plus Exit-Intent */
+/* Proaktive Logik: Tease → Auto-Open des Chats, plus Exit-Intent.
+   ALLE Trigger respektieren chatbot_dismissed_session.
+   Auf der Berater-Subpage (finder.html) lädt gar nichts davon. */
 function initChatbotProactive() {
+  // Wenn Nutzer schon auf der Berater-Seite ist, nichts triggern
+  if (location.pathname.includes('finder.html')) return;
+  // Wenn Nutzer den Chat in dieser Session weggeklickt hat, keine Trigger mehr
+  if (sessionStorage.getItem('chatbot_dismissed_session')) return;
+
+  const isDismissed = () => sessionStorage.getItem('chatbot_dismissed_session') === '1';
+
   // Tease-Bubble
   if (!sessionStorage.getItem('chatbot_tease_dismissed') && !sessionStorage.getItem('chatbot_tease_shown')) {
     let scrolled = 0;
     let timer = null;
     const teaseTrigger = () => {
+      if (isDismissed()) return;
       if (sessionStorage.getItem('chatbot_tease_dismissed')) return;
       if (chatbotState.open) return;
       const t = document.getElementById('chatbotTease');
@@ -1277,27 +1288,25 @@ function initChatbotProactive() {
     setTimeout(teaseTrigger, 22000);
   }
 
-  // Auto-Open: Wenn nach 25 Sekunden Verweil-Zeit der Chat noch zu ist und Nutzer keine andere Aktion gemacht hat
-  if (!sessionStorage.getItem('chatbot_autoopened') && !sessionStorage.getItem('chatbot_dismissed_session')) {
+  // Auto-Open nach 25 Sek Verweil
+  if (!sessionStorage.getItem('chatbot_autoopened')) {
     setTimeout(() => {
+      if (isDismissed()) return;
       if (chatbotState.open) return;
-      if (sessionStorage.getItem('chatbot_dismissed_session')) return;
-      // Bei aktiver Wizard-Seite (finder.html) nicht auto-öffnen
-      if (location.pathname.includes('finder.html')) return;
       sessionStorage.setItem('chatbot_autoopened', '1');
       openChatbot();
     }, 25000);
   }
 
-  // Exit-Intent: Mouse-Cursor verlässt den Viewport nach oben (Tab schließen / URL ändern)
+  // Exit-Intent: Cursor verlässt nach oben
   if (!sessionStorage.getItem('chatbot_exitintent_shown')) {
     let armed = false;
-    setTimeout(() => { armed = true; }, 8000); // erst nach 8 Sek scharf
+    setTimeout(() => { armed = true; }, 8000);
     document.addEventListener('mouseleave', (e) => {
       if (!armed) return;
-      if (e.clientY > 0) return; // nur wenn nach oben
+      if (e.clientY > 0) return;
+      if (isDismissed()) return;
       if (chatbotState.open) return;
-      if (sessionStorage.getItem('chatbot_dismissed_session')) return;
       sessionStorage.setItem('chatbot_exitintent_shown', '1');
       openChatbot();
     });
