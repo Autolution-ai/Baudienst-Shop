@@ -599,9 +599,10 @@ function renderChatbot() {
       <div class="chatbot-tease-author">Christian aus der Werkstatt</div>
       <div id="chatbotTeaseText">Hallo. Sehe Sie schauen sich Diamantwerkzeuge an. Soll ich Ihnen helfen das passende zu finden?</div>
     </div>
-    <button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()" aria-label="Chat öffnen">
+    <button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()" aria-label="Berater öffnen">
       <span class="chatbot-pulse"></span>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+      <span class="chatbot-toggle-label">Berater fragen</span>
     </button>
   </div>
   <aside class="chatbot-window" id="chatbotWindow" aria-hidden="true">
@@ -1247,41 +1248,76 @@ function chatbotSend() {
   runChatbotAdvisor(q);
 }
 
-/* Proaktive Tease-Logik: nach 18 Sekunden Scroll/Verweil-Aktivität, einmal pro Session */
+/* Proaktive Logik: Tease → Auto-Open des Chats, plus Exit-Intent */
 function initChatbotProactive() {
-  if (sessionStorage.getItem('chatbot_tease_dismissed')) return;
-  if (sessionStorage.getItem('chatbot_tease_shown')) return;
-  let scrolled = 0;
-  let timer = null;
-  const trigger = () => {
-    if (sessionStorage.getItem('chatbot_tease_dismissed')) return;
-    if (chatbotState.open) return;
-    const t = document.getElementById('chatbotTease');
-    const textEl = document.getElementById('chatbotTeaseText');
-    if (!t || !textEl) return;
-    // Kontext-spezifische Nachricht
-    const hash = location.hash;
-    let msg = 'Hallo. Ich sehe Sie schauen sich Diamantwerkzeuge an. Soll ich Ihnen helfen das passende zu finden? Drei Fragen reichen.';
-    if (hash === '#bde')        msg = 'Die BDE-Linie kommt direkt aus unserer Werkstatt. Wenn Sie unsicher sind welche Körnung Sie brauchen, klicken Sie hier rein.';
-    if (hash === '#werkstatt')  msg = 'Reparatur-Anfrage? Schreiben Sie mir hier kurz Hersteller und Modell, dann gebe ich Ihnen eine grobe Lieferzeit.';
-    if (hash === '#berater')    msg = 'Schon dabei den Berater zu starten? Wenn Sie lieber tippen statt klicken: ich frage Sie alles per Chat.';
-    textEl.textContent = msg;
-    t.classList.add('show');
-    sessionStorage.setItem('chatbot_tease_shown', '1');
-  };
-  const onScroll = () => {
-    scrolled++;
-    if (scrolled === 1) {
-      timer = setTimeout(trigger, 18000);
-    }
-    if (scrolled > 6 && timer) {
-      clearTimeout(timer);
-      trigger();
-    }
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  // Fallback: nach 30s pure Verweildauer trotzdem zeigen
-  setTimeout(trigger, 30000);
+  // Tease-Bubble
+  if (!sessionStorage.getItem('chatbot_tease_dismissed') && !sessionStorage.getItem('chatbot_tease_shown')) {
+    let scrolled = 0;
+    let timer = null;
+    const teaseTrigger = () => {
+      if (sessionStorage.getItem('chatbot_tease_dismissed')) return;
+      if (chatbotState.open) return;
+      const t = document.getElementById('chatbotTease');
+      const textEl = document.getElementById('chatbotTeaseText');
+      if (!t || !textEl) return;
+      const hash = location.hash;
+      let msg = 'Hallo. Sie schauen sich Diamantwerkzeuge an, kann ich Ihnen helfen das passende zu finden? Drei Fragen reichen.';
+      if (hash === '#bde')        msg = 'Die BDE-Linie kommt direkt aus unserer Werkstatt. Wenn Sie unsicher sind welche Körnung Sie brauchen, klicken Sie hier rein.';
+      if (hash === '#werkstatt')  msg = 'Reparatur-Anfrage? Schreiben Sie mir Hersteller und Modell, dann gebe ich Ihnen eine grobe Lieferzeit.';
+      textEl.textContent = msg;
+      t.classList.add('show');
+      sessionStorage.setItem('chatbot_tease_shown', '1');
+    };
+    const onScroll = () => {
+      scrolled++;
+      if (scrolled === 1) timer = setTimeout(teaseTrigger, 14000);
+      if (scrolled > 6 && timer) { clearTimeout(timer); teaseTrigger(); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    setTimeout(teaseTrigger, 22000);
+  }
+
+  // Auto-Open: Wenn nach 25 Sekunden Verweil-Zeit der Chat noch zu ist und Nutzer keine andere Aktion gemacht hat
+  if (!sessionStorage.getItem('chatbot_autoopened') && !sessionStorage.getItem('chatbot_dismissed_session')) {
+    setTimeout(() => {
+      if (chatbotState.open) return;
+      if (sessionStorage.getItem('chatbot_dismissed_session')) return;
+      // Bei aktiver Wizard-Seite (finder.html) nicht auto-öffnen
+      if (location.pathname.includes('finder.html')) return;
+      sessionStorage.setItem('chatbot_autoopened', '1');
+      openChatbot();
+    }, 25000);
+  }
+
+  // Exit-Intent: Mouse-Cursor verlässt den Viewport nach oben (Tab schließen / URL ändern)
+  if (!sessionStorage.getItem('chatbot_exitintent_shown')) {
+    let armed = false;
+    setTimeout(() => { armed = true; }, 8000); // erst nach 8 Sek scharf
+    document.addEventListener('mouseleave', (e) => {
+      if (!armed) return;
+      if (e.clientY > 0) return; // nur wenn nach oben
+      if (chatbotState.open) return;
+      if (sessionStorage.getItem('chatbot_dismissed_session')) return;
+      sessionStorage.setItem('chatbot_exitintent_shown', '1');
+      openChatbot();
+    });
+  }
+}
+
+/* Live-Counter für Social Proof: simuliert „Empfehlungen heute" */
+function renderAdvisorCounter() {
+  const els = document.querySelectorAll('.advisor-live-counter');
+  if (!els.length) return;
+  // Deterministischer Pseudo-Counter abhängig vom Tagesdatum, schwankt zwischen 47 und 89
+  const d = new Date();
+  const seed = (d.getDate() * 7 + d.getMonth() * 11 + 41) % 43;
+  const base = 47 + seed;
+  els.forEach(el => { el.textContent = base; });
+}
+
+function closeChatbotDismiss() {
+  sessionStorage.setItem('chatbot_dismissed_session', '1');
+  closeChatbot();
 }
 
 // In initShop einklinken
@@ -1289,6 +1325,7 @@ const _origInitShop = initShop;
 initShop = function(activeNav) {
   _origInitShop(activeNav);
   initChatbotProactive();
+  renderAdvisorCounter();
 };
 
 /* ============================================================

@@ -145,6 +145,53 @@
   <div class="products-grid" id="shopGrid"></div>
 </main>
 
+<!-- BERATER-BAND zwischen Grid und Spotlight -->
+<section class="advisor-band">
+  <div class="advisor-band-inner">
+    <div class="advisor-band-left">
+      <span class="advisor-band-eyebrow">Werkzeug-Berater</span>
+      <h2>Unsicher welches Werkzeug passt?</h2>
+      <p>Drei Fragen zu Material, Werkzeugtyp und Aufnahme. Wir schlagen drei konkrete Produkte vor und erklären, warum diese zu Ihrer Aufgabe passen. Antworten in unter einer Minute, ohne Anruf, ohne Mailadresse.</p>
+      <div class="advisor-band-stats">
+        <div>
+          <div class="advisor-band-stat-num"><span class="advisor-live-counter">63</span></div>
+          <div class="advisor-band-stat-label">Empfehlungen heute</div>
+        </div>
+        <div>
+          <div class="advisor-band-stat-num">~45 s</div>
+          <div class="advisor-band-stat-label">Durchschnitt bis Vorschlag</div>
+        </div>
+        <div>
+          <div class="advisor-band-stat-num">27</div>
+          <div class="advisor-band-stat-label">Produkte im Sortiment</div>
+        </div>
+      </div>
+      <div class="advisor-band-actions">
+        <a href="finder.html" class="btn-primary">Berater starten</a>
+        <button class="btn-secondary-light" onclick="openChatbot()">Im Chat fragen</button>
+      </div>
+    </div>
+    <div class="advisor-band-right">
+      <div class="advisor-band-preview">
+        <div class="advisor-band-preview-header">
+          <span class="advisor-band-avatar">CB</span>
+          <div>
+            <strong>Werkstatt-Berater</strong>
+            <em>antwortet meist innerhalb 45 Sek.</em>
+          </div>
+        </div>
+        <div class="advisor-band-bubble">Was für ein Untergrund liegt vor?</div>
+        <div class="advisor-band-chips">
+          <button onclick="openChatbot(); setTimeout(() => chatbotWizardStep(1, 'beton_normal'), 250);">Normalbeton</button>
+          <button onclick="openChatbot(); setTimeout(() => chatbotWizardStep(1, 'stahlbeton'), 250);">Stahlbeton</button>
+          <button onclick="openChatbot(); setTimeout(() => chatbotWizardStep(1, 'mauerwerk'), 250);">Mauerwerk</button>
+          <button onclick="openChatbot(); setTimeout(() => chatbotWizardStep(1, 'fliese'), 250);">Fliese</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- BDE SPOTLIGHT -->
 <section class="spotlight" id="bde">
   <div class="spotlight-inner">
